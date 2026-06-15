@@ -11,12 +11,10 @@ int main(void) {
 
   do {
     printf("Main Menu\n");
-    printf("1. To Split or Not to Split\n");
-    printf("2. Are You Soft Right Now Step-Bro?\n");
-    printf("3. Nah, I'm Hard AF\n");
+    printf("1. Pair Splitting");
+    printf("2. Soft Totals");
+    printf("3. Hard Totals");
     printf("0. Exit\n");
-    printf("\n");
-    printf("\n");
     printf("Please enter an option from the main menu: ");
     scanf(" %c", &menu_option);
 
