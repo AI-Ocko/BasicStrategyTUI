@@ -71,7 +71,6 @@ int pairSplittingTrainer(Score *score) {
 
   // Check the actual correct answer
   if (PairSplitting[playerPair - 1][dealerUpCard - 1] == YN) {
-    
   }
 
   if (PairSplitting[playerPair - 1][dealerUpCard - 1] == Y) {
