@@ -59,7 +59,7 @@ int pairSplittingTrainer(Score *score) {
   }
 
   // Get user choice
-  printf("Do you split? (Y)es,(N)o, or (Q)uit: ");
+  printf("Do you split? (Y)es, (N)o, or (Q)uit: ");
   scanf(" %c", &userAnswer);
 
   // exit
@@ -69,9 +69,28 @@ int pairSplittingTrainer(Score *score) {
 
   score->total++;
 
-  // Check the actual correct answer
   if (PairSplitting[playerPair - 1][dealerUpCard - 1] == Y) {
     correctAnswer = 'Y';
+  } else if (PairSplitting[playerPair - 1][dealerUpCard - 1] == YN) {
+
+    // Checking the correct answer
+    FILE *settingsFilePointer;
+    settingsFilePointer = fopen("settings.txt", "r");
+    if (settingsFilePointer == NULL) {
+      printf("Error accessing settings. Please fix");
+    }
+    // Debug print statement
+    // printf("Settings accessed successfully!\n");
+
+    char doubleAfterSplitEnabled = fgetc(settingsFilePointer);
+    fclose(settingsFilePointer);
+
+    if (doubleAfterSplitEnabled == 'Y') {
+      correctAnswer = 'Y';
+    } else {
+      correctAnswer = 'N';
+    }
+
   } else {
     correctAnswer = 'N';
   }
