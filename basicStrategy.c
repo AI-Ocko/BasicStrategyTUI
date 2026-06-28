@@ -102,7 +102,6 @@ int main(void) {
         fputc(doubleAfterSplitEnabled, settingsFilePointer);
         fclose(settingsFilePointer);
       }
-
       break;
 
     case '0':
