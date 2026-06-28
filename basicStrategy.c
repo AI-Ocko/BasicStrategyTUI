@@ -16,19 +16,25 @@ void Trainer(int (*trainerFunction)(Score *score)) {
 }
 
 int main(void) {
-  char menu_option, initials;
-  int difficulty;
-
-  printf("==============Basic==Strategy==Trainer=============\n");
+  char menu_option;
+  char settings_option;
 
   do {
-    printf("Main Menu\n");
-    printf("1. Pair Splitting\n");
-    printf("2. Soft Totals\n");
-    printf("3. Hard Totals\n");
-    printf("4. Options\n");
-    printf("0. Exit\n");
-    printf("Please enter an option from the main menu: ");
+    printf("+-----------------------------------+\n");
+    printf("|       Basic Strategy Trainer      |\n");
+    printf("|-----------------------------------|\n");
+    printf("|             Main Menu             |\n");
+    printf("|-----------------------------------|\n");
+    printf("|  1. Pair Splitting                |\n");
+    printf("|  2. Soft Totals                   |\n");
+    printf("|  3. Hard Totals                   |\n");
+    printf("|  4. Options                       |\n");
+    // printf("|  5. Full Game Practice            |\n");
+    printf("|  0. Exit                          |\n");
+    printf("|-----------------------------------|\n");
+    printf("| Please enter an option from the   |\n");
+    printf("| main menu                         |\n");
+    printf("+-----------------------------------+\n");
     scanf(" %c", &menu_option);
 
     switch (menu_option) {
@@ -41,10 +47,39 @@ int main(void) {
     case '3':
       Trainer(hardTotalTrainer);
       break;
+    case '4':
+      do {
+        printf("+-----------------------------------+\n");
+        printf("|       Basic Strategy Trainer      |\n");
+        printf("|-----------------------------------|\n");
+        printf("|             Settings              |\n");
+        printf("|-----------------------------------|\n");
+        printf("|  1. Double After Split:           |\n");
+        printf("|  0. Main Menu                     |\n");
+        printf("|-----------------------------------|\n");
+        printf("| Please enter an option from the   |\n");
+        printf("| main menu                         |\n");
+        printf("+-----------------------------------+\n");
+
+        scanf(" %c", &settings_option);
+
+        switch (settings_option) {
+        case '1':
+          FILE *settingsFilePointer;
+
+          // Open the actual settings.txt for settings persistence
+          settingsFilePointer = fopen("settings.txt", "r");
+          if (settingsFilePointer == NULL) {
+            printf("Error accessing settings. Please fix");
+          } else {
+          }
+        }
+      } while (settings_option != '0');
+      break;
     case '0':
       break;
     default:
-      printf("invalid input");
+      printf("Invalid input\n");
       break;
     }
   } while (menu_option != '0');

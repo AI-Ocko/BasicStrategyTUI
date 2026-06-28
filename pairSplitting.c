@@ -59,7 +59,7 @@ int pairSplittingTrainer(Score *score) {
   }
 
   // Get user choice
-  printf("Do you split? (Y)es,(N)o, or (Q)uit: ");
+  printf("Do you split? (Y)es, (N)o, or (Q)uit: ");
   scanf(" %c", &userAnswer);
 
   // exit
@@ -70,6 +70,10 @@ int pairSplittingTrainer(Score *score) {
   score->total++;
 
   // Check the actual correct answer
+  if (PairSplitting[playerPair - 1][dealerUpCard - 1] == YN) {
+    
+  }
+
   if (PairSplitting[playerPair - 1][dealerUpCard - 1] == Y) {
     correctAnswer = 'Y';
   } else {
