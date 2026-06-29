@@ -78,6 +78,7 @@ int pairSplittingTrainer(Score *score) {
     settingsFilePointer = fopen("settings.txt", "r");
     if (settingsFilePointer == NULL) {
       printf("Error accessing settings. Please fix");
+      return 0;
     }
     // Debug print statement
     printf("Settings accessed successfully!\n");

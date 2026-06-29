@@ -66,6 +66,7 @@ int softTotalTrainer(Score *score) {
   settingsFilePointer = fopen("settings.txt", "r");
   if (settingsFilePointer == NULL) {
     printf("Error accessing settings. Please fix");
+    return 0;
   }
 
   // Debug print
