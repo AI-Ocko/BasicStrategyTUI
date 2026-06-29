@@ -59,7 +59,7 @@ int main(void) {
       Trainer(softTotalTrainer, ptrSettings);
       break;
     case '3':
-      // Trainer(hardTotalTrainer);
+      Trainer(hardTotalTrainer, ptrSettings);
       break;
     case '4':
       do {

@@ -5,7 +5,7 @@
 
 // Dealer
 // UpCard-----A------2------3------4------5------6------7------8------9-----10
-Action HardTotals[10][10] = {
+Action HardTotalsH17[10][10] = {
     /*  8 */ {H, H, H, H, H, H, H, H, H, H},
     /*  9 */ {H, D, D, D, D, H, H, H, H, H},
     /* 10 */ {D, D, D, D, D, D, D, D, H, H},
@@ -17,7 +17,19 @@ Action HardTotals[10][10] = {
     /* 16 */ {S, S, S, S, S, H, H, H, H, H},
     /* 17 */ {S, S, S, S, S, S, S, S, S, S}};
 
-int hardTotalTrainer(Score *score) {
+Action HardTotalsS17[10][10] = {
+    /*  8 */ {H, H, H, H, H, H, H, H, H, H},
+    /*  9 */ {H, D, D, D, D, H, H, H, H, H},
+    /* 10 */ {D, D, D, D, D, D, D, D, H, H},
+    /* 11 */ {H, D, D, D, D, D, D, D, D, D},
+    /* 12 */ {H, H, S, S, S, H, H, H, H, H},
+    /* 13 */ {S, S, S, S, S, H, H, H, H, H},
+    /* 14 */ {S, S, S, S, S, H, H, H, H, H},
+    /* 15 */ {S, S, S, S, S, H, H, H, H, H},
+    /* 16 */ {S, S, S, S, S, H, H, H, H, H},
+    /* 17 */ {S, S, S, S, S, S, S, S, S, S}};
+
+int hardTotalTrainer(Score *score, Settings *settings) {
   int dealerUpCard = (rand() % 10) + 1; // shifts value to A(1)-10
   int playerHardTotal =
       (rand() % 10) + 8; // shifts hardtotal to actual range 8-17
@@ -36,7 +48,7 @@ int hardTotalTrainer(Score *score) {
   printPlayerHardTotal =
       playerHardTotal; // add 8 to the index to reflect actual total
 
-  // Print hard total and delaer up card
+  // Print hard total and dealer up card
   printf("You have a total of %d!\n", printPlayerHardTotal);
   if (printDealerUpCard == 'A') {
     printf("Dealer's up card is %c!\n", printDealerUpCard);
@@ -57,19 +69,39 @@ int hardTotalTrainer(Score *score) {
   score->total++;
 
   // Check correct answer
-  switch (HardTotals[playerHardTotal - 8][dealerUpCard - 1]) {
-  case 0:
-    correctAnswer = 'H';
-    break;
-  case 1:
-    correctAnswer = 'S';
-    break;
-  case 2:
-    correctAnswer = 'D';
-    break;
-  default:
-    printf("error checking answer\n");
-    break;
+  if (settings->h17OrS17 == 'H') {
+    switch (HardTotalsH17[playerHardTotal - 8][dealerUpCard - 1]) {
+    case 0:
+      correctAnswer = 'H';
+      break;
+    case 1:
+      correctAnswer = 'S';
+      break;
+    case 2:
+      correctAnswer = 'D';
+      break;
+    default:
+      printf("error checking answer\n");
+      break;
+    }
+  } else if (settings->h17OrS17 == 'S') {
+    switch (HardTotalsS17[playerHardTotal - 8][dealerUpCard - 1]) {
+    case 0:
+      correctAnswer = 'H';
+      break;
+    case 1:
+      correctAnswer = 'S';
+      break;
+    case 2:
+      correctAnswer = 'D';
+      break;
+    default:
+      printf("error checking answer\n");
+      break;
+    }
+  } else {
+    printf("Error. Please Check settings.\n");
+    return 0;
   }
 
   // Compare
