@@ -24,7 +24,7 @@ typedef enum {
 
 } Action;
 
-int pairSplittingTrainer(Score *score);
+int pairSplittingTrainer(Score *score, Settings *settings);
 int softTotalTrainer(Score *score);
 int hardTotalTrainer(Score *score);
 

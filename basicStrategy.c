@@ -3,10 +3,12 @@
 #include <stdlib.h>
 #include <time.h>
 
-void Trainer(int (*trainerFunction)(Score *score)) {
+void Trainer(int (*trainerFunction)(Score *score,
+                                    Settings *trainerSettingsPointer)) {
   Score score = {0, 0};
+  Settings trainerSettingsPointer;
   srand(time(NULL));
-  while (trainerFunction(&score)) {
+  while (trainerFunction(&score, &trainerSettingsPointer)) {
     if (score.total > 0) {
       printf("\n--- Results ---\n");
       printf("Score: %d / %d\n", score.correct, score.total);
@@ -28,8 +30,9 @@ int main(void) {
     printf("Could not load settings.\n");
     return 1;
   }
-  settingsDAS = fgetc(settingsFilePointer);
-  settingsH17S17 = fgetc(settingsFilePointer);
+  Settings settings = {settingsDAS = fgetc(settingsFilePointer),
+                       settingsH17S17 = fgetc(settingsFilePointer)};
+  Settings *ptrSettings = &settings;
   fclose(settingsFilePointer);
 
   do {
@@ -55,10 +58,10 @@ int main(void) {
       Trainer(pairSplittingTrainer);
       break;
     case '2':
-      Trainer(softTotalTrainer);
+      // Trainer(softTotalTrainer);
       break;
     case '3':
-      Trainer(hardTotalTrainer);
+      // Trainer(hardTotalTrainer);
       break;
     case '4':
       do {
@@ -68,8 +71,10 @@ int main(void) {
         printf("|-----------------------------------|\n");
         printf("|             Settings              |\n");
         printf("|-----------------------------------|\n");
-        printf("|  1. Double After Split: %c         |\n", settingsDAS);
-        printf("|  2. Hit-17 or Stand-17: %c-17      |\n", settingsH17S17);
+        printf("|  1. Double After Split: %c         |\n",
+               ptrSettings->doubleAfterSplit);
+        printf("|  2. Hit-17 or Stand-17: %c-17      |\n",
+               ptrSettings->h17OrS17);
         printf("|  0. Save and Exit                 |\n");
         printf("|-----------------------------------|\n");
         printf("| Please enter an option from the   |\n");
@@ -81,17 +86,17 @@ int main(void) {
         // Toggle settings
         switch (settingsOption) {
         case '1':
-          if (settingsDAS == 'Y') {
-            settingsDAS = 'N';
+          if (ptrSettings->doubleAfterSplit == 'Y') {
+            ptrSettings->doubleAfterSplit = 'N';
           } else {
-            settingsDAS = 'Y';
+            ptrSettings->doubleAfterSplit = 'Y';
           }
           break;
         case '2':
-          if (settingsH17S17 == 'H') {
-            settingsH17S17 = 'S';
+          if (ptrSettings->h17OrS17 == 'H') {
+            ptrSettings->h17OrS17 = 'S';
           } else {
-            settingsH17S17 = 'H';
+            ptrSettings->h17OrS17 = 'H';
           }
           break;
 
@@ -105,8 +110,8 @@ int main(void) {
       settingsFilePointer = fopen("settings.txt", "w");
       if (settingsFilePointer != NULL) {
         rewind(settingsFilePointer);
-        fputc(settingsDAS, settingsFilePointer);
-        fputc(settingsH17S17, settingsFilePointer);
+        fputc(ptrSettings->doubleAfterSplit, settingsFilePointer);
+        fputc(ptrSettings->h17OrS17, settingsFilePointer);
         fclose(settingsFilePointer);
       } else {
         printf("Something went wrong opening settings file\n");
