@@ -7,6 +7,11 @@ typedef struct {
 
 } Score;
 
+typedef struct {
+  char doubleAfterSplit; //   Y/N
+  char h17OrS17;         //   H/S
+} Settings;
+
 typedef enum {
   H = 0,
   S = 1,
@@ -19,8 +24,8 @@ typedef enum {
 
 } Action;
 
-int pairSplittingTrainer(Score *score);
-int softTotalTrainer(Score *score);
+int pairSplittingTrainer(Score *score, Settings *settings);
+int softTotalTrainer(Score *score, Settings *settings);
 int hardTotalTrainer(Score *score);
 
 extern Action HardTotals[10][10];

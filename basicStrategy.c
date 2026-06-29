@@ -3,10 +3,12 @@
 #include <stdlib.h>
 #include <time.h>
 
-void Trainer(int (*trainerFunction)(Score *score)) {
+void Trainer(int (*trainerFunction)(Score *score,
+                                    Settings *trainerSettingsPointer)) {
   Score score = {0, 0};
+  Settings trainerSettingsPointer;
   srand(time(NULL));
-  while (trainerFunction(&score)) {
+  while (trainerFunction(&score, &trainerSettingsPointer)) {
     if (score.total > 0) {
       printf("\n--- Results ---\n");
       printf("Score: %d / %d\n", score.correct, score.total);
@@ -16,8 +18,22 @@ void Trainer(int (*trainerFunction)(Score *score)) {
 }
 
 int main(void) {
-  char menu_option;
-  char settings_option;
+  char menuOption;
+  char settingsOption;
+  char settingsDAS;
+  char settingsH17S17;
+
+  // Open settings and save settings to struct inside main()
+  FILE *settingsFilePointer;
+  settingsFilePointer = fopen("settings.txt", "r");
+  if (settingsFilePointer == NULL) {
+    printf("Could not load settings.\n");
+    return 1;
+  }
+  Settings settings = {settingsDAS = fgetc(settingsFilePointer),
+                       settingsH17S17 = fgetc(settingsFilePointer)};
+  Settings *ptrSettings = &settings;
+  fclose(settingsFilePointer);
 
   do {
     printf("+-----------------------------------+\n");
@@ -35,9 +51,9 @@ int main(void) {
     printf("| Please enter an option from the   |\n");
     printf("| main menu                         |\n");
     printf("+-----------------------------------+\n");
-    scanf(" %c", &menu_option);
+    scanf(" %c", &menuOption);
 
-    switch (menu_option) {
+    switch (menuOption) {
     case '1':
       Trainer(pairSplittingTrainer);
       break;
@@ -45,26 +61,9 @@ int main(void) {
       Trainer(softTotalTrainer);
       break;
     case '3':
-      Trainer(hardTotalTrainer);
+      // Trainer(hardTotalTrainer);
       break;
     case '4':
-      FILE *settingsFilePointer;
-
-      // Open the actual settings.txt for settings persistence
-      settingsFilePointer = fopen("settings.txt", "r");
-      if (settingsFilePointer == NULL) {
-        printf("Error accessing settings. Please fix");
-        break;
-      }
-
-      // Debug print statement
-      // printf("Settings Accessed\n");
-
-      // Accessing doubleAfterSplitEnabled
-      char doubleAfterSplitEnabled = fgetc(settingsFilePointer);
-
-      fclose(settingsFilePointer);
-
       do {
 
         printf("+-----------------------------------+\n");
@@ -73,34 +72,50 @@ int main(void) {
         printf("|             Settings              |\n");
         printf("|-----------------------------------|\n");
         printf("|  1. Double After Split: %c         |\n",
-               doubleAfterSplitEnabled);
-        printf("|  0. Main Menu                     |\n");
+               ptrSettings->doubleAfterSplit);
+        printf("|  2. Hit-17 or Stand-17: %c-17      |\n",
+               ptrSettings->h17OrS17);
+        printf("|  0. Save and Exit                 |\n");
         printf("|-----------------------------------|\n");
         printf("| Please enter an option from the   |\n");
         printf("| main menu                         |\n");
         printf("+-----------------------------------+\n");
 
-        scanf(" %c", &settings_option);
+        scanf(" %c", &settingsOption);
 
-        switch (settings_option) {
+        // Toggle settings
+        switch (settingsOption) {
         case '1':
-          if (doubleAfterSplitEnabled == 'Y') {
-            doubleAfterSplitEnabled = 'N';
+          if (ptrSettings->doubleAfterSplit == 'Y') {
+            ptrSettings->doubleAfterSplit = 'N';
           } else {
-            doubleAfterSplitEnabled = 'Y';
+            ptrSettings->doubleAfterSplit = 'Y';
           }
           break;
+        case '2':
+          if (ptrSettings->h17OrS17 == 'H') {
+            ptrSettings->h17OrS17 = 'S';
+          } else {
+            ptrSettings->h17OrS17 = 'H';
+          }
+          break;
+
         default:
-          printf("I don't know how we got here\n");
+          printf("Please enter a valid option.\n");
           break;
         }
-      } while (settings_option != '0');
+      } while (settingsOption != '0');
 
-      // Repoen settings.txt and write the option
+      // Repoen settings.txt and save the inputs the user gave
       settingsFilePointer = fopen("settings.txt", "w");
       if (settingsFilePointer != NULL) {
-        fputc(doubleAfterSplitEnabled, settingsFilePointer);
+        rewind(settingsFilePointer);
+        fputc(ptrSettings->doubleAfterSplit, settingsFilePointer);
+        fputc(ptrSettings->h17OrS17, settingsFilePointer);
         fclose(settingsFilePointer);
+      } else {
+        printf("Something went wrong opening settings file\n");
+        break;
       }
       break;
 
@@ -110,7 +125,7 @@ int main(void) {
       printf("Invalid input\n");
       break;
     }
-  } while (menu_option != '0');
+  } while (menuOption != '0');
 
   return 0;
 }
