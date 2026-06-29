@@ -24,7 +24,7 @@ int surrender[3][10] = {
     /* 16 */ {0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
 };
 
-int pairSplittingTrainer(Score *score, Settings *trainerSettingsPointer) {
+int pairSplittingTrainer(Score *score, Settings *settings) {
   char printPlayerPair;
   char printDealerUpCard;
   char userAnswer;
@@ -73,7 +73,7 @@ int pairSplittingTrainer(Score *score, Settings *trainerSettingsPointer) {
     correctAnswer = 'Y';
   } else if (PairSplitting[playerPair - 1][dealerUpCard - 1] == YN) {
 
-    if (trainerSettingsPointer->doubleAfterSplit == 'Y') {
+    if (settings->doubleAfterSplit == 'Y') {
       correctAnswer = 'Y';
     } else {
       correctAnswer = 'N';

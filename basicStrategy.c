@@ -3,12 +3,11 @@
 #include <stdlib.h>
 #include <time.h>
 
-void Trainer(int (*trainerFunction)(Score *score,
-                                    Settings *trainerSettingsPointer)) {
+void Trainer(int (*trainerFunction)(Score *score, Settings *settings),
+             Settings *settings) {
   Score score = {0, 0};
-  Settings trainerSettingsPointer;
   srand(time(NULL));
-  while (trainerFunction(&score, &trainerSettingsPointer)) {
+  while (trainerFunction(&score, settings)) {
     if (score.total > 0) {
       printf("\n--- Results ---\n");
       printf("Score: %d / %d\n", score.correct, score.total);
@@ -20,8 +19,6 @@ void Trainer(int (*trainerFunction)(Score *score,
 int main(void) {
   char menuOption;
   char settingsOption;
-  char settingsDAS;
-  char settingsH17S17;
 
   // Open settings and save settings to struct inside main()
   FILE *settingsFilePointer;
@@ -30,8 +27,9 @@ int main(void) {
     printf("Could not load settings.\n");
     return 1;
   }
-  Settings settings = {settingsDAS = fgetc(settingsFilePointer),
-                       settingsH17S17 = fgetc(settingsFilePointer)};
+  Settings settings;
+  settings.doubleAfterSplit = fgetc(settingsFilePointer);
+  settings.h17OrS17 = fgetc(settingsFilePointer);
   Settings *ptrSettings = &settings;
   fclose(settingsFilePointer);
 
@@ -55,10 +53,10 @@ int main(void) {
 
     switch (menuOption) {
     case '1':
-      Trainer(pairSplittingTrainer);
+      Trainer(pairSplittingTrainer, ptrSettings);
       break;
     case '2':
-      Trainer(softTotalTrainer);
+      Trainer(softTotalTrainer, ptrSettings);
       break;
     case '3':
       // Trainer(hardTotalTrainer);
