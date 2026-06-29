@@ -30,7 +30,7 @@ Action HardTotalsS17[10][10] = {
     /* 17 */ {S, S, S, S, S, S, S, S, S, S}};
 
 int hardTotalTrainer(Score *score, Settings *settings) {
-  int dealerUpCard = (rand() % 10) + 1; // shifts value to A(1)-10
+  int dealerUpCard = dealDealerUpCard(); // shifts value to A(1)-10
   int playerHardTotal =
       (rand() % 10) + 8; // shifts hardtotal to actual range 8-17
 

@@ -26,7 +26,7 @@ Action SoftTotalsS17[8][10] = {
     /* A,9 */ {S, S, S, S, S, S, S, S, S, S}};
 
 int softTotalTrainer(Score *score, Settings *settings) {
-  int dealerUpCard = (rand() % 10) + 1;
+  int dealerUpCard = dealDealerUpCard();
   int playerSecondCard = rand() % 8;
 
   char printPlayerSecondCard;

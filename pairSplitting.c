@@ -31,7 +31,7 @@ int pairSplittingTrainer(Score *score, Settings *settings) {
   char correctAnswer;
 
   // Generate random pair and dealerUpCard
-  int dealerUpCard = (rand() % 10) + 1;
+  int dealerUpCard = dealDealerUpCard();
   int playerPair = (rand() % 10) + 1;
 
   // typecasting for converting a randomly generated '1' into an 'A'

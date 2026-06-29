@@ -28,6 +28,9 @@ int pairSplittingTrainer(Score *score, Settings *settings);
 int softTotalTrainer(Score *score, Settings *settings);
 int hardTotalTrainer(Score *score, Settings *settings);
 
+// Trainer Helper Functions
+int dealDealerUpCard(void);
+
 extern Action HardTotals[10][10];
 extern Action SoftTotals[8][10];
 extern Action PairSplitting[10][10];
