@@ -62,6 +62,7 @@ int main(void) {
 
       // Accessing doubleAfterSplitEnabled
       char doubleAfterSplitEnabled = fgetc(settingsFilePointer);
+      char which17Game = fgetc(settingsFilePointer);
 
       fclose(settingsFilePointer);
 
@@ -74,7 +75,8 @@ int main(void) {
         printf("|-----------------------------------|\n");
         printf("|  1. Double After Split: %c         |\n",
                doubleAfterSplitEnabled);
-        printf("|  0. Main Menu                     |\n");
+        printf("|  2. Hit-17 or Stand-17: %c-17      |\n", which17Game);
+        printf("|  0. Save and Exit                 |\n");
         printf("|-----------------------------------|\n");
         printf("| Please enter an option from the   |\n");
         printf("| main menu                         |\n");
@@ -90,16 +92,25 @@ int main(void) {
             doubleAfterSplitEnabled = 'Y';
           }
           break;
+        case '2':
+          if (which17Game == 'H') {
+            which17Game = 'S';
+          } else {
+            which17Game = 'H';
+          }
+          break;
         default:
           printf("I don't know how we got here\n");
           break;
         }
       } while (settings_option != '0');
 
-      // Repoen settings.txt and write the option
+      // Repoen settings.txt and save the inputs the user gave
       settingsFilePointer = fopen("settings.txt", "w");
       if (settingsFilePointer != NULL) {
+        rewind(settingsFilePointer);
         fputc(doubleAfterSplitEnabled, settingsFilePointer);
+        fputc(which17Game, settingsFilePointer);
         fclose(settingsFilePointer);
       }
       break;

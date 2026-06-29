@@ -73,14 +73,14 @@ int pairSplittingTrainer(Score *score) {
     correctAnswer = 'Y';
   } else if (PairSplitting[playerPair - 1][dealerUpCard - 1] == YN) {
 
-    // Checking the correct answer
+    // Checking whether doubling after splitting is allowed
     FILE *settingsFilePointer;
     settingsFilePointer = fopen("settings.txt", "r");
     if (settingsFilePointer == NULL) {
       printf("Error accessing settings. Please fix");
     }
     // Debug print statement
-    // printf("Settings accessed successfully!\n");
+    printf("Settings accessed successfully!\n");
 
     char doubleAfterSplitEnabled = fgetc(settingsFilePointer);
     fclose(settingsFilePointer);
