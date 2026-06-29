@@ -26,7 +26,6 @@ int surrender[3][10] = {
 
 int pairSplittingTrainer(Score *score, Settings *settings) {
   char printPlayerPair;
-  char printDealerUpCard;
   char userAnswer;
   char correctAnswer;
 
@@ -40,11 +39,6 @@ int pairSplittingTrainer(Score *score, Settings *settings) {
   } else {
     printPlayerPair = playerPair;
   }
-  if (dealerUpCard == 1) {
-    printDealerUpCard = 'A';
-  } else {
-    printDealerUpCard = dealerUpCard;
-  }
 
   // Print messages
   if (printPlayerPair == 'A') {
@@ -52,11 +46,7 @@ int pairSplittingTrainer(Score *score, Settings *settings) {
   } else {
     printf("You have a pair of %d's!\n", printPlayerPair);
   }
-  if (printDealerUpCard == 'A') {
-    printf("Dealer's up card is %c\n", printDealerUpCard);
-  } else {
-    printf("Dealer's up card is %d\n", printDealerUpCard);
-  }
+  printDealerUpCard(dealerUpCard);
 
   // Get user choice
   printf("Do you split? (Y)es, (N)o, or (Q)uit: ");
@@ -70,19 +60,8 @@ int pairSplittingTrainer(Score *score, Settings *settings) {
   score->total++;
 
   // Check correct answer
-  if (PairSplitting[playerPair - 1][dealerUpCard - 1] == Y) {
-    correctAnswer = 'Y';
-  } else if (PairSplitting[playerPair - 1][dealerUpCard - 1] == YN) {
-
-    if (settings->doubleAfterSplit == 'Y') {
-      correctAnswer = 'Y';
-    } else {
-      correctAnswer = 'N';
-    }
-
-  } else {
-    correctAnswer = 'N';
-  }
+  correctAnswer =
+      answerToChar(PairSplitting[playerPair - 1][dealerUpCard - 1], settings);
 
   // Compare correct answer with user answer
   if (correctAnswer == toupper(userAnswer)) {

@@ -35,26 +35,16 @@ int hardTotalTrainer(Score *score, Settings *settings) {
       (rand() % 10) + 8; // shifts hardtotal to actual range 8-17
 
   char printPlayerHardTotal;
-  char printDealerUpCard;
   char userAnswer;
   char correctAnswer;
 
   // set print cards to appropriate values
-  if (dealerUpCard == 1) {
-    printDealerUpCard = 'A';
-  } else {
-    printDealerUpCard = dealerUpCard;
-  }
   printPlayerHardTotal =
       playerHardTotal; // add 8 to the index to reflect actual total
 
   // Print hard total and dealer up card
   printf("You have a total of %d!\n", printPlayerHardTotal);
-  if (printDealerUpCard == 'A') {
-    printf("Dealer's up card is %c!\n", printDealerUpCard);
-  } else {
-    printf("Dealer's up card is %d!\n", printDealerUpCard);
-  }
+  printDealerUpCard(dealerUpCard);
 
   // Get user choice
   printf("Do you (H)it, (D)ouble, (S)tand, or (Q)uit?: ");
@@ -70,38 +60,13 @@ int hardTotalTrainer(Score *score, Settings *settings) {
 
   // Check correct answer
   if (settings->h17OrS17 == 'H') {
-    switch (HardTotalsH17[playerHardTotal - 8][dealerUpCard - 1]) {
-    case H:
-      correctAnswer = 'H';
-      break;
-    case S:
-      correctAnswer = 'S';
-      break;
-    case D:
-      correctAnswer = 'D';
-      break;
-    default:
-      printf("error checking answer\n");
-      break;
-    }
+    correctAnswer = answerToChar(
+        HardTotalsH17[playerHardTotal - 8][dealerUpCard - 1], settings);
   } else if (settings->h17OrS17 == 'S') {
-    switch (HardTotalsS17[playerHardTotal - 8][dealerUpCard - 1]) {
-    case H:
-      correctAnswer = 'H';
-      break;
-    case S:
-      correctAnswer = 'S';
-      break;
-    case D:
-      correctAnswer = 'D';
-      break;
-    default:
-      printf("error checking answer\n");
-      break;
-    }
+    correctAnswer = answerToChar(
+        HardTotalsS17[playerHardTotal - 8][dealerUpCard - 1], settings);
   } else {
-    printf("Error. Please Check settings.\n");
-    return 0;
+    printf("Error. Please check settings.\n");
   }
 
   // Compare

@@ -30,6 +30,8 @@ int hardTotalTrainer(Score *score, Settings *settings);
 
 // Trainer Helper Functions
 int dealDealerUpCard(void);
+void printDealerUpCard(int dealerUpCard);
+char answerToChar(Action a, Settings *settings);
 
 extern Action HardTotals[10][10];
 extern Action SoftTotals[8][10];

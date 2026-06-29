@@ -1,6 +1,37 @@
 #include "basicStrategy.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
 int dealDealerUpCard() { return rand() % 10 + 1; }
+
+void printDealerUpCard(int dealerUpCard) {
+  if (dealerUpCard == 1) {
+    printf("Dealer's Up Card is A\n");
+  } else {
+    printf("Dealer's Up Card is %d\n", dealerUpCard);
+  }
+}
+
+char answerToChar(Action a, Settings *settings) {
+  switch (a) {
+  case H:
+    return 'H';
+  case S:
+    return 'S';
+  case D:
+    return 'D';
+  case Ds:
+    return settings->h17OrS17 == 'H' ? 'D' : 'S';
+  case N:
+    return 'N';
+  case Y:
+    return 'Y';
+  case YN:
+    return settings->doubleAfterSplit == 'Y' ? 'Y' : 'N';
+  case Surr:
+    return 's';
+  default:
+    printf("Error, could not print answer.\n");
+    break;
+  }
+}

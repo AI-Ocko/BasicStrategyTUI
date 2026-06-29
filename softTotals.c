@@ -30,25 +30,15 @@ int softTotalTrainer(Score *score, Settings *settings) {
   int playerSecondCard = rand() % 8;
 
   char printPlayerSecondCard;
-  char printDealerUpCard;
   char userAnswer;
   char correctAnswer;
 
   // Convert int to char
   printPlayerSecondCard = playerSecondCard + '2';
-  if (dealerUpCard == 1) {
-    printDealerUpCard = 'A';
-  } else {
-    printDealerUpCard = dealerUpCard;
-  }
 
   // Print messages
   printf("You have A,%c\n", printPlayerSecondCard);
-  if (printDealerUpCard == 'A') {
-    printf("Dealer's up card is %c\n", printDealerUpCard);
-  } else {
-    printf("Dealer's up card is %d\n", printDealerUpCard);
-  }
+  printDealerUpCard(dealerUpCard);
 
   // Get user choice
   printf("Do you (H)it, (D)ouble, (S)tand, or (Q)uit?: ");
@@ -61,51 +51,12 @@ int softTotalTrainer(Score *score, Settings *settings) {
 
   score->total++;
 
-  // Check if game is H-17 or S-17
   if (settings->h17OrS17 == 'H') {
-    // Debug print
-    // printf("This is a H-17 Game. Dealer hits on soft 17\n");
-
-    // Check correct answer
-    switch (SoftTotalsH17[playerSecondCard][dealerUpCard - 1]) {
-    case H:
-      correctAnswer = 'H';
-      break;
-    case S:
-      correctAnswer = 'S';
-      break;
-    case D:
-      correctAnswer = 'D';
-      break;
-    case Ds:
-      correctAnswer = 'D';
-      break;
-    default:
-      printf("error checking answer\n");
-      break;
-    }
+    correctAnswer = answerToChar(
+        SoftTotalsH17[playerSecondCard][dealerUpCard - 1], settings);
   } else {
-    // Debug print
-    // printf("This is a S-17 Game. Dealer stands on soft 17\n");
-
-    // Check correct answer
-    switch (SoftTotalsS17[playerSecondCard][dealerUpCard - 1]) {
-    case H:
-      correctAnswer = 'H';
-      break;
-    case S:
-      correctAnswer = 'S';
-      break;
-    case D:
-      correctAnswer = 'D';
-      break;
-    case Ds:
-      correctAnswer = 'S';
-      break;
-    default:
-      printf("error checking answer\n");
-      break;
-    }
+    correctAnswer = answerToChar(
+        SoftTotalsS17[playerSecondCard][dealerUpCard - 1], settings);
   }
 
   // Compare
