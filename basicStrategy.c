@@ -23,7 +23,7 @@ int main(void) {
   char settingsDAS;
   char settingsH17S17;
 
-  // Open settings and save inside main()
+  // Open settings and save settings to struct inside main()
   FILE *settingsFilePointer;
   settingsFilePointer = fopen("settings.txt", "r");
   if (settingsFilePointer == NULL) {
@@ -58,7 +58,7 @@ int main(void) {
       Trainer(pairSplittingTrainer);
       break;
     case '2':
-      // Trainer(softTotalTrainer);
+      Trainer(softTotalTrainer);
       break;
     case '3':
       // Trainer(hardTotalTrainer);
