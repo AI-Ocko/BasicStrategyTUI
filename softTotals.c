@@ -25,7 +25,7 @@ Action SoftTotalsS17[8][10] = {
     /* A,8 */ {S, S, S, S, S, S, S, S, S, S},
     /* A,9 */ {S, S, S, S, S, S, S, S, S, S}};
 
-int softTotalTrainer(Score *score) {
+int softTotalTrainer(Score *score, Settings *trainerSettingsPointer) {
   int dealerUpCard = (rand() % 9) + 1;
   int playerSecondCard = rand() % 8;
 
@@ -61,22 +61,8 @@ int softTotalTrainer(Score *score) {
 
   score->total++;
 
-  // Check if we are in H17 or S17 game
-  FILE *settingsFilePointer;
-  settingsFilePointer = fopen("settings.txt", "r");
-  if (settingsFilePointer == NULL) {
-    printf("Error accessing settings. Please fix");
-    return 0;
-  }
-
-  // Debug print
-  // printf("Settings Accessed Successfully\n");
-
-  fgetc(settingsFilePointer);
-  char which17Game = fgetc(settingsFilePointer);
-  fclose(settingsFilePointer);
-
-  if (which17Game == 'H') {
+  // Check if game is H-17 or S-17
+  if (trainerSettingsPointer->h17OrS17 == 'H') {
     // Debug print
     // printf("This is a H-17 Game. Dealer hits on soft 17\n");
 

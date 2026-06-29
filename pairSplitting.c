@@ -24,15 +24,15 @@ int surrender[3][10] = {
     /* 16 */ {0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
 };
 
-int pairSplittingTrainer(Score *score) {
-  // Generate random pair and dealerUpCard
-  int dealerUpCard = (rand() % 10) + 1;
-  int playerPair = (rand() % 10) + 1;
-
+int pairSplittingTrainer(Score *score, Settings *trainerSettingsPointer) {
   char printPlayerPair;
   char printDealerUpCard;
   char userAnswer;
   char correctAnswer;
+
+  // Generate random pair and dealerUpCard
+  int dealerUpCard = (rand() % 10) + 1;
+  int playerPair = (rand() % 10) + 1;
 
   // typecasting for converting a randomly generated '1' into an 'A'
   if (playerPair == 1) {
@@ -73,20 +73,7 @@ int pairSplittingTrainer(Score *score) {
     correctAnswer = 'Y';
   } else if (PairSplitting[playerPair - 1][dealerUpCard - 1] == YN) {
 
-    // Checking whether doubling after splitting is allowed
-    FILE *settingsFilePointer;
-    settingsFilePointer = fopen("settings.txt", "r");
-    if (settingsFilePointer == NULL) {
-      printf("Error accessing settings. Please fix");
-      return 0;
-    }
-    // Debug print statement
-    printf("Settings accessed successfully!\n");
-
-    char doubleAfterSplitEnabled = fgetc(settingsFilePointer);
-    fclose(settingsFilePointer);
-
-    if (doubleAfterSplitEnabled == 'Y') {
+    if (trainerSettingsPointer->doubleAfterSplit == 'Y') {
       correctAnswer = 'Y';
     } else {
       correctAnswer = 'N';
