@@ -81,7 +81,7 @@ int pairSplittingTrainer(Score *score) {
       return 0;
     }
     // Debug print statement
-    printf("Settings accessed successfully!\n");
+    // printf("Settings accessed successfully!\n");
 
     char doubleAfterSplitEnabled = fgetc(settingsFilePointer);
     fclose(settingsFilePointer);

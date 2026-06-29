@@ -7,6 +7,11 @@ typedef struct {
 
 } Score;
 
+typedef struct {
+  char doubleAfterSplit; //   Y/N
+  char h17OrS17;         //   H/S
+} Settings;
+
 typedef enum {
   H = 0,
   S = 1,
