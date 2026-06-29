@@ -27,12 +27,15 @@ int main(void) {
     printf("Could not load settings.\n");
     return 1;
   }
+
+  // Save settings.txt information to local struct pointer
   Settings settings;
   settings.doubleAfterSplit = fgetc(settingsFilePointer);
   settings.h17OrS17 = fgetc(settingsFilePointer);
   Settings *ptrSettings = &settings;
   fclose(settingsFilePointer);
 
+  // Main menu
   do {
     printf("+-----------------------------------+\n");
     printf("|       Basic Strategy Trainer      |\n");
@@ -51,6 +54,7 @@ int main(void) {
     printf("+-----------------------------------+\n");
     scanf(" %c", &menuOption);
 
+    // Trainer options
     switch (menuOption) {
     case '1':
       Trainer(pairSplittingTrainer, ptrSettings);
@@ -62,6 +66,7 @@ int main(void) {
       // Trainer(hardTotalTrainer);
       break;
     case '4':
+      // Settings menu
       do {
 
         printf("+-----------------------------------+\n");
@@ -107,7 +112,7 @@ int main(void) {
       // Repoen settings.txt and save the inputs the user gave
       settingsFilePointer = fopen("settings.txt", "w");
       if (settingsFilePointer != NULL) {
-        rewind(settingsFilePointer);
+        // rewind(settingsFilePointer);
         fputc(ptrSettings->doubleAfterSplit, settingsFilePointer);
         fputc(ptrSettings->h17OrS17, settingsFilePointer);
         fclose(settingsFilePointer);
