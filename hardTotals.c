@@ -55,9 +55,6 @@ int hardTotalTrainer(Score *score, Settings *settings) {
     return 0;
   }
 
-  // Increment total number of hands played
-  score->total++;
-
   // Check correct answer
   if (settings->h17OrS17 == 'H') {
     correctAnswer = answerToChar(
@@ -70,12 +67,7 @@ int hardTotalTrainer(Score *score, Settings *settings) {
   }
 
   // Compare
-  if (correctAnswer == toupper(userAnswer)) {
-    printf("Correct!\n");
-    score->correct++; // Increment correct number of answers
-  } else {
-    printf("Incorrect!, Correct answer was %c\n", correctAnswer);
-  }
+  checkAndScore(score, correctAnswer, userAnswer);
 
   return 1;
 };

@@ -49,8 +49,6 @@ int softTotalTrainer(Score *score, Settings *settings) {
     return 0;
   }
 
-  score->total++;
-
   if (settings->h17OrS17 == 'H') {
     correctAnswer = answerToChar(
         SoftTotalsH17[playerSecondCard][dealerUpCard - 1], settings);
@@ -59,13 +57,7 @@ int softTotalTrainer(Score *score, Settings *settings) {
         SoftTotalsS17[playerSecondCard][dealerUpCard - 1], settings);
   }
 
-  // Compare
-  if (correctAnswer == toupper(userAnswer)) {
-    printf("Correct!\n");
-    score->correct++;
-  } else {
-    printf("Incorrect! Correct answer was %c\n", correctAnswer);
-  }
+  checkAndScore(score, correctAnswer, userAnswer);
 
   return 1;
 };

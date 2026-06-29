@@ -32,6 +32,7 @@ int hardTotalTrainer(Score *score, Settings *settings);
 int dealDealerUpCard(void);
 void printDealerUpCard(int dealerUpCard);
 char answerToChar(Action a, Settings *settings);
+void checkAndScore(Score *score, char correctAnswer, char userAnswer);
 
 extern Action HardTotals[10][10];
 extern Action SoftTotals[8][10];

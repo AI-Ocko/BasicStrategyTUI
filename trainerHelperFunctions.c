@@ -1,4 +1,5 @@
 #include "basicStrategy.h"
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -35,3 +36,14 @@ char answerToChar(Action a, Settings *settings) {
     break;
   }
 }
+
+void checkAndScore(Score *score, char correctAnswer, char userAnswer) {
+  score->total++;
+
+  if (correctAnswer == toupper(userAnswer)) {
+    printf("Correct!\n");
+    score->correct++;
+  } else {
+    printf("Incorrect...The correct answer is %c\n", correctAnswer);
+  }
+};

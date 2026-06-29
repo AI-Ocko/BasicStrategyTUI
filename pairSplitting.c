@@ -57,19 +57,12 @@ int pairSplittingTrainer(Score *score, Settings *settings) {
     return 0;
   }
 
-  score->total++;
-
   // Check correct answer
   correctAnswer =
       answerToChar(PairSplitting[playerPair - 1][dealerUpCard - 1], settings);
 
   // Compare correct answer with user answer
-  if (correctAnswer == toupper(userAnswer)) {
-    printf("Correct!\n");
-    score->correct++;
-  } else {
-    printf("Incorrect! Correct answer was %c\n", correctAnswer);
-  }
+  checkAndScore(score, correctAnswer, userAnswer);
 
   return 1;
 }
