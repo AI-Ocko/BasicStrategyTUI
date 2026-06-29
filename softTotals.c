@@ -26,7 +26,7 @@ Action SoftTotalsS17[8][10] = {
     /* A,9 */ {S, S, S, S, S, S, S, S, S, S}};
 
 int softTotalTrainer(Score *score, Settings *settings) {
-  int dealerUpCard = (rand() % 9) + 1;
+  int dealerUpCard = (rand() % 10) + 1;
   int playerSecondCard = rand() % 8;
 
   char printPlayerSecondCard;
@@ -68,16 +68,16 @@ int softTotalTrainer(Score *score, Settings *settings) {
 
     // Check correct answer
     switch (SoftTotalsH17[playerSecondCard][dealerUpCard - 1]) {
-    case 0:
+    case H:
       correctAnswer = 'H';
       break;
-    case 1:
+    case S:
       correctAnswer = 'S';
       break;
-    case 2:
+    case D:
       correctAnswer = 'D';
       break;
-    case 3:
+    case Ds:
       correctAnswer = 'D';
       break;
     default:
@@ -90,16 +90,16 @@ int softTotalTrainer(Score *score, Settings *settings) {
 
     // Check correct answer
     switch (SoftTotalsS17[playerSecondCard][dealerUpCard - 1]) {
-    case 0:
+    case H:
       correctAnswer = 'H';
       break;
-    case 1:
+    case S:
       correctAnswer = 'S';
       break;
-    case 2:
+    case D:
       correctAnswer = 'D';
       break;
-    case 3:
+    case Ds:
       correctAnswer = 'S';
       break;
     default:

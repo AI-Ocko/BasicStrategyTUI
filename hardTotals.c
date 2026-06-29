@@ -71,13 +71,13 @@ int hardTotalTrainer(Score *score, Settings *settings) {
   // Check correct answer
   if (settings->h17OrS17 == 'H') {
     switch (HardTotalsH17[playerHardTotal - 8][dealerUpCard - 1]) {
-    case 0:
+    case H:
       correctAnswer = 'H';
       break;
-    case 1:
+    case S:
       correctAnswer = 'S';
       break;
-    case 2:
+    case D:
       correctAnswer = 'D';
       break;
     default:
@@ -86,13 +86,13 @@ int hardTotalTrainer(Score *score, Settings *settings) {
     }
   } else if (settings->h17OrS17 == 'S') {
     switch (HardTotalsS17[playerHardTotal - 8][dealerUpCard - 1]) {
-    case 0:
+    case H:
       correctAnswer = 'H';
       break;
-    case 1:
+    case S:
       correctAnswer = 'S';
       break;
-    case 2:
+    case D:
       correctAnswer = 'D';
       break;
     default:
