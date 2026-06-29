@@ -34,8 +34,10 @@ void printDealerUpCard(int dealerUpCard);
 char answerToChar(Action a, Settings *settings);
 void checkAndScore(Score *score, char correctAnswer, char userAnswer);
 
-extern Action HardTotals[10][10];
-extern Action SoftTotals[8][10];
+extern Action HardTotalsH17[10][10];
+extern Action HardTotalsS17[10][10];
+extern Action SoftTotalsH17[8][10];
+extern Action SoftTotalsS17[8][10];
 extern Action PairSplitting[10][10];
 extern int surrender[3][10];
 

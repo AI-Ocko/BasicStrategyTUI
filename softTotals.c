@@ -8,7 +8,7 @@
 Action SoftTotalsH17[8][10] = {
     /* A,2 */ {H, H, H, H, D, D, H, H, H, H},
     /* A,3 */ {H, H, H, H, D, D, H, H, H, H},
-    /* A,5 */ {H, H, H, D, D, D, H, H, H, H},
+    /* A,4 */ {H, H, H, D, D, D, H, H, H, H},
     /* A,5 */ {H, H, H, D, D, D, H, H, H, H},
     /* A,6 */ {H, H, D, D, D, D, H, H, H, H},
     /* A,7 */ {H, Ds, Ds, Ds, Ds, Ds, S, S, H, H},
@@ -18,7 +18,7 @@ Action SoftTotalsH17[8][10] = {
 Action SoftTotalsS17[8][10] = {
     /* A,2 */ {H, H, H, H, D, D, H, H, H, H},
     /* A,3 */ {H, H, H, H, D, D, H, H, H, H},
-    /* A,5 */ {H, H, H, D, D, D, H, H, H, H},
+    /* A,4 */ {H, H, H, D, D, D, H, H, H, H},
     /* A,5 */ {H, H, H, D, D, D, H, H, H, H},
     /* A,6 */ {H, H, D, D, D, D, H, H, H, H},
     /* A,7 */ {H, S, Ds, Ds, Ds, Ds, S, S, H, H},

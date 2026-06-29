@@ -34,16 +34,11 @@ int hardTotalTrainer(Score *score, Settings *settings) {
   int playerHardTotal =
       (rand() % 10) + 8; // shifts hardtotal to actual range 8-17
 
-  char printPlayerHardTotal;
   char userAnswer;
   char correctAnswer;
 
-  // set print cards to appropriate values
-  printPlayerHardTotal =
-      playerHardTotal; // add 8 to the index to reflect actual total
-
   // Print hard total and dealer up card
-  printf("You have a total of %d!\n", printPlayerHardTotal);
+  printf("You have a total of %d!\n", playerHardTotal);
   printDealerUpCard(dealerUpCard);
 
   // Get user choice

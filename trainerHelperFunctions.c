@@ -33,7 +33,7 @@ char answerToChar(Action a, Settings *settings) {
     return 's';
   default:
     printf("Error, could not print answer.\n");
-    break;
+    return '?';
   }
 }
 

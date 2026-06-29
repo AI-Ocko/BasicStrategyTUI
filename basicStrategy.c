@@ -22,18 +22,29 @@ int main(void) {
 
   // Open settings and save settings to struct inside main()
   FILE *settingsFilePointer;
+  Settings settings;
   settingsFilePointer = fopen("settings.txt", "r");
   if (settingsFilePointer == NULL) {
-    printf("Could not load settings.\n");
-    return 1;
+    printf("No settings found. Setting default settings.\n");
+    settings.doubleAfterSplit = 'Y';
+    settings.h17OrS17 = 'H';
+    settingsFilePointer = fopen("settings.txt", "w");
+    if (settingsFilePointer != NULL) {
+      fputc(settings.doubleAfterSplit, settingsFilePointer);
+      fputc(settings.h17OrS17, settingsFilePointer);
+      fclose(settingsFilePointer);
+    } else {
+      printf("*Gulp* Uh...Boss? You might want to take a look at this\n");
+      return 1;
+    }
+  } else {
+    // Save settings.txt information to local struct pointer
+    settings.doubleAfterSplit = fgetc(settingsFilePointer);
+    settings.h17OrS17 = fgetc(settingsFilePointer);
+    fclose(settingsFilePointer);
   }
 
-  // Save settings.txt information to local struct pointer
-  Settings settings;
-  settings.doubleAfterSplit = fgetc(settingsFilePointer);
-  settings.h17OrS17 = fgetc(settingsFilePointer);
   Settings *ptrSettings = &settings;
-  fclose(settingsFilePointer);
 
   // Main menu
   do {
@@ -112,7 +123,6 @@ int main(void) {
       // Repoen settings.txt and save the inputs the user gave
       settingsFilePointer = fopen("settings.txt", "w");
       if (settingsFilePointer != NULL) {
-        // rewind(settingsFilePointer);
         fputc(ptrSettings->doubleAfterSplit, settingsFilePointer);
         fputc(ptrSettings->h17OrS17, settingsFilePointer);
         fclose(settingsFilePointer);
