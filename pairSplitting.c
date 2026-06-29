@@ -69,6 +69,7 @@ int pairSplittingTrainer(Score *score, Settings *settings) {
 
   score->total++;
 
+  // Check correct answer
   if (PairSplitting[playerPair - 1][dealerUpCard - 1] == Y) {
     correctAnswer = 'Y';
   } else if (PairSplitting[playerPair - 1][dealerUpCard - 1] == YN) {
@@ -83,7 +84,7 @@ int pairSplittingTrainer(Score *score, Settings *settings) {
     correctAnswer = 'N';
   }
 
-  // Compare
+  // Compare correct answer with user answer
   if (correctAnswer == toupper(userAnswer)) {
     printf("Correct!\n");
     score->correct++;
