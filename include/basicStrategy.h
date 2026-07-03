@@ -1,8 +1,6 @@
 #ifndef BASICSTRATEGY_H
 #define BASICSTRATEGY_H
 
-#include <curses.h>
-
 typedef struct {
   int correct;
   int total;
@@ -35,7 +33,6 @@ int dealDealerUpCard(void);
 void printDealerUpCard(int dealerUpCard);
 char answerToChar(Action a, Settings *settings);
 void checkAndScore(Score *score, char correctAnswer, char userAnswer);
-void PrintMenuScreen(WINDOW *win, char menuOption);
 
 extern Action HardTotalsH17[10][10];
 extern Action HardTotalsS17[10][10];
