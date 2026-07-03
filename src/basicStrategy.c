@@ -1,4 +1,6 @@
 #include "../include/basicStrategy.h"
+#include "../include/init_scr.h"
+#include <curses.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -46,56 +48,71 @@ int main(void) {
 
   Settings *ptrSettings = &settings;
 
+  // Initialize ncurses
+  initscr();            // Start ncurses mode, creates stdscr
+  cbreak();             // Disable line buffering, get input char-by-char
+  noecho();             // don't echo typed keys automatically
+  keypad(stdscr, TRUE); // enable arrow keys, F-keys, etc.
+  curs_set(0);          // hides the terminal cursor
+
   // Main menu
   do {
-    printf("+-----------------------------------+\n");
-    printf("|       Basic Strategy Trainer      |\n");
-    printf("|-----------------------------------|\n");
-    printf("|             Main Menu             |\n");
-    printf("|-----------------------------------|\n");
-    printf("|  1. Pair Splitting                |\n");
-    printf("|  2. Soft Totals                   |\n");
-    printf("|  3. Hard Totals                   |\n");
-    printf("|  4. Options                       |\n");
-    // printf("|  5. Full Game Practice            |\n");
-    printf("|  0. Exit                          |\n");
-    printf("|-----------------------------------|\n");
-    printf("| Please enter an option from the   |\n");
-    printf("| main menu                         |\n");
-    printf("+-----------------------------------+\n");
-    scanf(" %c", &menuOption);
+
+    int yMax, xMax;
+    getmaxyx(stdscr, yMax, xMax);
+
+    // Initialize window and main menu
+    WINDOW *win = newwin(yMax / 2, xMax / 2, yMax / 4, xMax / 4);
+    box(win, 0, 0);
+    wattron(win, A_STANDOUT);
+    mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_MAIN_MENU, "Main Menu");
+    wattroff(win, A_STANDOUT);
+    mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING, "(1)Pair Splitting");
+    mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_SOFT_TOTALS, "(2)Soft Totals");
+    mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_HARD_TOTALS, "(3)Hard Totals");
+    mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_SETTINGS, "(4)Settings");
+    mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_EXIT, "(0)Exit");
+
+    wrefresh(win);
+    menuOption = wgetch(win);
 
     // Trainer options
     switch (menuOption) {
     case '1':
-      Trainer(pairSplittingTrainer, ptrSettings);
+      PrintMenuScreen(win, menuOption);
+      wrefresh(win);
+      // Trainer(pairSplittingTrainer, ptrSettings);
       break;
-    case '2':
-      Trainer(softTotalTrainer, ptrSettings);
+      PrintMenuScreen(win, menuOption);
+      // Trainer(softTotalTrainer, ptrSettings);
       break;
     case '3':
-      Trainer(hardTotalTrainer, ptrSettings);
+      PrintMenuScreen(win, menuOption);
+      // Trainer(hardTotalTrainer, ptrSettings);
       break;
     case '4':
+      PrintMenuScreen(win, menuOption);
       // Settings menu
       do {
 
-        printf("+-----------------------------------+\n");
-        printf("|       Basic Strategy Trainer      |\n");
-        printf("|-----------------------------------|\n");
-        printf("|             Settings              |\n");
-        printf("|-----------------------------------|\n");
-        printf("|  1. Double After Split: %c         |\n",
-               ptrSettings->doubleAfterSplit);
-        printf("|  2. Hit-17 or Stand-17: %c-17      |\n",
-               ptrSettings->h17OrS17);
-        printf("|  0. Save and Exit                 |\n");
-        printf("|-----------------------------------|\n");
-        printf("| Please enter an option from the   |\n");
-        printf("| main menu                         |\n");
-        printf("+-----------------------------------+\n");
+        // printf("+-----------------------------------+\n");
+        // printf("|       Basic Strategy Trainer      |\n");
+        // printf("|-----------------------------------|\n");
+        // printf("|             Settings              |\n");
+        // printf("|-----------------------------------|\n");
+        // printf("|  1. Double After Split: %c         |\n",
+        //        ptrSettings->doubleAfterSplit);
+        // printf("|  2. Hit-17 or Stand-17: %c-17      |\n",
+        //        ptrSettings->h17OrS17);
+        // printf("|  0. Save and Exit                 |\n");
+        // printf("|-----------------------------------|\n");
+        // printf("| Please enter an option from the   |\n");
+        // printf("| main menu                         |\n");
+        // printf("+-----------------------------------+\n");
 
-        scanf(" %c", &settingsOption);
+        settingsOption = wgetch(win);
+
+        // scanf(" %c", &settingsOption);
 
         // Toggle settings
         switch (settingsOption) {
@@ -115,7 +132,7 @@ int main(void) {
           break;
 
         default:
-          printf("Please enter a valid option.\n");
+          wprintw(win, "Please enter a valid option.\n");
           break;
         }
       } while (settingsOption != '0');
@@ -138,7 +155,13 @@ int main(void) {
       printf("Invalid input\n");
       break;
     }
+
+    // Reset to main menu
+    delwin(win);
+
   } while (menuOption != '0');
+
+  endwin();
 
   return 0;
 }

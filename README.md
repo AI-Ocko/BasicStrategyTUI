@@ -1,9 +1,13 @@
 # Basic Strategy Trainer
+
 ### What is This?
-This is a little personal project to practice Blackjack Basic Strategy via the command line
+
+This is a personal project; a BlackJack Basic Strategy Trainer fully written in C. It uses the ncurses library for a feature rich TUI trainer application.
 
 ### How do I run it?
+
 Simply go to the root of the project, and run `make all`, then run `./bin/basicStrategyTrainer`
 
-### TODO:
-1. Create a fully playable game
+### TODO
+
+1. Migrate the trainers to use ncurses
