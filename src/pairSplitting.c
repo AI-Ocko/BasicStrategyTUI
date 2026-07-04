@@ -1,7 +1,6 @@
 #include "../include/basicStrategy.h"
 #include <ctype.h>
 #include <curses.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 // Dealer
@@ -58,10 +57,8 @@ int pairSplittingTrainer(WINDOW *window, Score *score, Settings *settings) {
   printDealerUpCard(window, dealerUpCard);
 
   // Get user choice
-  // printf("Do you split? (Y)es, (N)o, or (Q)uit: ");
   mvwprintw(window, 7, 4, "Do you split? (Y)es, (N)o, or (Q)uit: ");
   wrefresh(window);
-  // scanf(" %c", &userAnswer);
   userAnswer = wgetch(window);
 
   // exit

@@ -91,12 +91,15 @@ int main(void) {
     int screenTop = menuTop + menuHeight + gap;
     int screenHt = (yMax - 2) - screenTop; // leave 2-row margin at the bottom
 
-    // Initialize window and main menu
+    // Initialize window and main menu screen
     WINDOW *screenWindow = newwin(screenHt, xMax - 4, screenTop, 2);
     box(screenWindow, 0, 0);
 
     mvwprintw(screenWindow, 3, 5,
               "Welcome to the BlackJack Basic Strategy TUI Trainer!");
+    mvwprintw(
+        screenWindow, 5, 5,
+        "Press the key of the (H)ighlighted character to go to that menu");
 
     wrefresh(menuWindow);
     wrefresh(screenWindow);
@@ -193,6 +196,7 @@ int main(void) {
         } else {
           mvwprintw(screenWindow, 5, 4, "2. Hit-17 or Stand-17? [ Stand ]");
         }
+        mvwprintw(screenWindow, 7, 4, "0. Save and Exit");
 
         // Toggle settings
         switch (settingsOption = wgetch(screenWindow)) {
