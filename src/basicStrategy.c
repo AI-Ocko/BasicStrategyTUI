@@ -1,17 +1,25 @@
 #include "../include/basicStrategy.h"
+#include "../include/init_scr.h"
+#include <curses.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
-void Trainer(int (*trainerFunction)(Score *score, Settings *settings),
+void Trainer(WINDOW *window,
+             int (*trainerFunction)(WINDOW *win, Score *score,
+                                    Settings *settings),
              Settings *settings) {
   Score score = {0, 0};
   srand(time(NULL));
-  while (trainerFunction(&score, settings)) {
+  while (trainerFunction(window, &score, settings)) {
+    // Print results
     if (score.total > 0) {
-      printf("\n--- Results ---\n");
-      printf("Score: %d / %d\n", score.correct, score.total);
-      printf("Accuracy: %.1f%%\n\n", (float)score.correct / score.total * 100);
+      mvwprintw(window, 11, 4, "--- Results ---");
+      mvwprintw(window, 13, 4, "Score: %d / %d", score.correct, score.total);
+      mvwprintw(window, 15, 4, "Accuracy: %.1f%%",
+                (float)score.correct / score.total * 100);
+      mvwprintw(window, 19, 20, "Press any key to continue");
+      wgetch(window);
     }
   };
 }
@@ -46,76 +54,174 @@ int main(void) {
 
   Settings *ptrSettings = &settings;
 
+  // Initialize ncurses
+  initscr();            // Start ncurses mode, creates stdscr
+  cbreak();             // Disable line buffering, get input char-by-char
+  noecho();             // don't echo typed keys automatically
+  keypad(stdscr, TRUE); // enable arrow keys, F-keys, etc.
+  curs_set(0);          // hides the terminal cursor
+
   // Main menu
   do {
-    printf("+-----------------------------------+\n");
-    printf("|       Basic Strategy Trainer      |\n");
-    printf("|-----------------------------------|\n");
-    printf("|             Main Menu             |\n");
-    printf("|-----------------------------------|\n");
-    printf("|  1. Pair Splitting                |\n");
-    printf("|  2. Soft Totals                   |\n");
-    printf("|  3. Hard Totals                   |\n");
-    printf("|  4. Options                       |\n");
-    // printf("|  5. Full Game Practice            |\n");
-    printf("|  0. Exit                          |\n");
-    printf("|-----------------------------------|\n");
-    printf("| Please enter an option from the   |\n");
-    printf("| main menu                         |\n");
-    printf("+-----------------------------------+\n");
-    scanf(" %c", &menuOption);
+    int yMax, xMax;
+    getmaxyx(stdscr, yMax, xMax);
+
+    // Menu bar area: border(1) + menu row(1) + border(1) = 3 rows, starting at
+    // y=2
+    int menuTop = 2;
+    int menuHeight = 3;
+
+    WINDOW *menuWindow = newwin(menuHeight, xMax - 4, menuTop, 2);
+    box(menuWindow, 0, 0);
+    // ... menu bar mvwprintw calls stay the same, all at row 0 ...
+
+    wattron(menuWindow, A_STANDOUT);
+    mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_MAIN_MENU, "Main Menu");
+    wattroff(menuWindow, A_STANDOUT);
+    mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING,
+              "(1)Pair Splitting");
+    mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_SOFT_TOTALS, "(2)Soft Totals");
+    mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_HARD_TOTALS, "(3)Hard Totals");
+    mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_SETTINGS, "(4)Settings");
+    mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_EXIT, "(0)Exit");
+
+    // Screen window: starts right after the menu bar (+1 row gap), fills rest
+    // of screen
+    int gap = 1;
+    int screenTop = menuTop + menuHeight + gap;
+    int screenHt = (yMax - 2) - screenTop; // leave 2-row margin at the bottom
+
+    // Initialize window and main menu
+    WINDOW *screenWindow = newwin(screenHt, xMax - 4, screenTop, 2);
+    box(screenWindow, 0, 0);
+
+    mvwprintw(screenWindow, 3, 5,
+              "Welcome to the BlackJack Basic Strategy TUI Trainer!");
+
+    wrefresh(menuWindow);
+    wrefresh(screenWindow);
+
+    menuOption = wgetch(menuWindow);
 
     // Trainer options
     switch (menuOption) {
     case '1':
-      Trainer(pairSplittingTrainer, ptrSettings);
+      werase(menuWindow);
+      box(menuWindow, 0, 0);
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_MAIN_MENU, "Main Menu");
+      wattron(menuWindow, A_STANDOUT);
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING,
+                "(1)Pair Splitting");
+      wattroff(menuWindow, A_STANDOUT);
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_SOFT_TOTALS,
+                "(2)Soft Totals");
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_HARD_TOTALS,
+                "(3)Hard Totals");
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_SETTINGS, "(4)Settings");
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_EXIT, "(Q)uit");
+      wrefresh(menuWindow);
+      Trainer(screenWindow, pairSplittingTrainer, ptrSettings);
       break;
     case '2':
-      Trainer(softTotalTrainer, ptrSettings);
+      werase(menuWindow);
+      box(menuWindow, 0, 0);
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_MAIN_MENU, "Main Menu");
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING,
+                "(1)Pair Splitting");
+      wattron(menuWindow, A_STANDOUT);
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_SOFT_TOTALS,
+                "(2)Soft Totals");
+      wattroff(menuWindow, A_STANDOUT);
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_HARD_TOTALS,
+                "(3)Hard Totals");
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_SETTINGS, "(4)Settings");
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_EXIT, "(Q)uit");
+      wrefresh(menuWindow);
+      Trainer(screenWindow, softTotalTrainer, ptrSettings);
       break;
     case '3':
-      Trainer(hardTotalTrainer, ptrSettings);
+      werase(menuWindow);
+      box(menuWindow, 0, 0);
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_MAIN_MENU, "Main Menu");
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING,
+                "(1)Pair Splitting");
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_SOFT_TOTALS,
+                "(2)Soft Totals");
+      wattron(menuWindow, A_STANDOUT);
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_HARD_TOTALS,
+                "(3)Hard Totals");
+      wattroff(menuWindow, A_STANDOUT);
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_SETTINGS, "(4)Settings");
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_EXIT, "(0)Exit");
+      wrefresh(menuWindow);
+      Trainer(screenWindow, hardTotalTrainer, ptrSettings);
       break;
     case '4':
-      // Settings menu
       do {
+        // Update Menu Bar
+        werase(menuWindow);
+        box(menuWindow, 0, 0);
+        mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_MAIN_MENU, "Main Menu");
+        mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING,
+                  "(1)Pair Splitting");
+        mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_SOFT_TOTALS,
+                  "(2)Soft Totals");
+        mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_HARD_TOTALS,
+                  "(3)Hard Totals");
+        wattron(menuWindow, A_STANDOUT);
+        mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_SETTINGS, "(4)Settings");
+        wattroff(menuWindow, A_STANDOUT);
+        mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_EXIT, "(0)Save and Exit");
+        wrefresh(menuWindow);
 
-        printf("+-----------------------------------+\n");
-        printf("|       Basic Strategy Trainer      |\n");
-        printf("|-----------------------------------|\n");
-        printf("|             Settings              |\n");
-        printf("|-----------------------------------|\n");
-        printf("|  1. Double After Split: %c         |\n",
-               ptrSettings->doubleAfterSplit);
-        printf("|  2. Hit-17 or Stand-17: %c-17      |\n",
-               ptrSettings->h17OrS17);
-        printf("|  0. Save and Exit                 |\n");
-        printf("|-----------------------------------|\n");
-        printf("| Please enter an option from the   |\n");
-        printf("| main menu                         |\n");
-        printf("+-----------------------------------+\n");
+        // Wipe screen for settings menu
+        werase(screenWindow);
+        box(screenWindow, 0, 0);
+        wrefresh(screenWindow);
 
-        scanf(" %c", &settingsOption);
+        // Display initial settings
+        if (ptrSettings->doubleAfterSplit == 'Y') {
+          mvwprintw(screenWindow, 3, 4,
+                    "1. Double After Split Enabled? [ Yes ]");
+        } else {
+          mvwprintw(screenWindow, 3, 4,
+                    "1. Double After Split Enabled? [ No  ]");
+        }
+
+        if (ptrSettings->h17OrS17 == 'H') {
+          mvwprintw(screenWindow, 5, 4, "2. Hit-17 or Stand-17? [  Hit  ]");
+        } else {
+          mvwprintw(screenWindow, 5, 4, "2. Hit-17 or Stand-17? [ Stand ]");
+        }
 
         // Toggle settings
-        switch (settingsOption) {
+        switch (settingsOption = wgetch(screenWindow)) {
         case '1':
           if (ptrSettings->doubleAfterSplit == 'Y') {
             ptrSettings->doubleAfterSplit = 'N';
+            mvwprintw(screenWindow, 3, 4,
+                      "1. Double After Split Enabled? [ No  ]");
           } else {
             ptrSettings->doubleAfterSplit = 'Y';
+            mvwprintw(screenWindow, 3, 4,
+                      "1. Double After Split Enabled? [ Yes ]");
           }
           break;
         case '2':
           if (ptrSettings->h17OrS17 == 'H') {
             ptrSettings->h17OrS17 = 'S';
+            mvwprintw(screenWindow, 5, 4, "2. Hit-17 or Stand-17? [ Stand ]");
           } else {
             ptrSettings->h17OrS17 = 'H';
+            mvwprintw(screenWindow, 5, 4, "2. Hit-17 or Stand-17? [  Hit  ]");
           }
           break;
-
+        case '0':
+          break;
         default:
-          printf("Please enter a valid option.\n");
+          mvwprintw(screenWindow, 10, 15, "Please enter a valid option");
+          settingsOption = wgetch(screenWindow);
+          mvwprintw(screenWindow, 10, 15, "                           ");
           break;
         }
       } while (settingsOption != '0');
@@ -131,14 +237,19 @@ int main(void) {
         break;
       }
       break;
-
     case '0':
       break;
     default:
-      printf("Invalid input\n");
+      mvwprintw(screenWindow, 10, 15, "Invalid input");
       break;
     }
+
+    // Reset to main menu
+    delwin(menuWindow);
+    delwin(screenWindow);
   } while (menuOption != '0');
+
+  endwin();
 
   return 0;
 }

@@ -1,6 +1,8 @@
 #ifndef BASICSTRATEGY_H
 #define BASICSTRATEGY_H
 
+#include <curses.h>
+
 typedef struct {
   int correct;
   int total;
@@ -24,15 +26,16 @@ typedef enum {
 
 } Action;
 
-int pairSplittingTrainer(Score *score, Settings *settings);
-int softTotalTrainer(Score *score, Settings *settings);
-int hardTotalTrainer(Score *score, Settings *settings);
+int pairSplittingTrainer(WINDOW *window, Score *score, Settings *settings);
+int softTotalTrainer(WINDOW *window, Score *score, Settings *settings);
+int hardTotalTrainer(WINDOW *window, Score *score, Settings *settings);
 
 // Trainer Helper Functions
 int dealDealerUpCard(void);
-void printDealerUpCard(int dealerUpCard);
+void printDealerUpCard(WINDOW *window, int dealerUpCard);
 char answerToChar(Action a, Settings *settings);
-void checkAndScore(Score *score, char correctAnswer, char userAnswer);
+void checkAndScore(WINDOW *window, Score *score, char correctAnswer,
+                   char userAnswer);
 
 extern Action HardTotalsH17[10][10];
 extern Action HardTotalsS17[10][10];
