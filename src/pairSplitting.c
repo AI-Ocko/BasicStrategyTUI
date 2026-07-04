@@ -1,5 +1,6 @@
 #include "../include/basicStrategy.h"
 #include <ctype.h>
+#include <curses.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -24,7 +25,7 @@ int surrender[3][10] = {
     /* 16 */ {0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
 };
 
-int pairSplittingTrainer(WINDOW *win, Score *score, Settings *settings) {
+int pairSplittingTrainer(WINDOW *window, Score *score, Settings *settings) {
   char printPlayerPair;
   char userAnswer;
   char correctAnswer;
@@ -40,21 +41,28 @@ int pairSplittingTrainer(WINDOW *win, Score *score, Settings *settings) {
     printPlayerPair = playerPair;
   }
 
+  werase(window);
+  box(window, 0, 0);
+  wrefresh(window);
+
   // Print messages
   if (printPlayerPair == 'A') {
     // printf("You have a pair of %c's!\n", printPlayerPair);
-    mvwprintw(win, 3, 4, "You have a pair of %c's!", printPlayerPair);
-    wrefresh(win);
+    mvwprintw(window, 3, 4, "You have a pair of %c's!", printPlayerPair);
+    wrefresh(window);
   } else {
     // printf("You have a pair of %d's!\n", printPlayerPair);
-    mvwprintw(win, 3, 4, "You have a pair of %d's!", printPlayerPair);
-    wrefresh(win);
+    mvwprintw(window, 3, 4, "You have a pair of %d's!", printPlayerPair);
+    wrefresh(window);
   }
-  printDealerUpCard(win, dealerUpCard);
+  printDealerUpCard(window, dealerUpCard);
 
   // Get user choice
-  printf("Do you split? (Y)es, (N)o, or (Q)uit: ");
-  scanf(" %c", &userAnswer);
+  // printf("Do you split? (Y)es, (N)o, or (Q)uit: ");
+  mvwprintw(window, 7, 4, "Do you split? (Y)es, (N)o, or (Q)uit: ");
+  wrefresh(window);
+  // scanf(" %c", &userAnswer);
+  userAnswer = wgetch(window);
 
   // exit
   if (toupper(userAnswer) == 'Q') {
@@ -66,7 +74,7 @@ int pairSplittingTrainer(WINDOW *win, Score *score, Settings *settings) {
       answerToChar(PairSplitting[playerPair - 1][dealerUpCard - 1], settings);
 
   // Compare correct answer with user answer
-  checkAndScore(score, correctAnswer, userAnswer);
+  checkAndScore(window, score, correctAnswer, userAnswer);
 
   return 1;
 }

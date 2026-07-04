@@ -62,7 +62,7 @@ int hardTotalTrainer(Score *score, Settings *settings) {
   }
 
   // Compare
-  checkAndScore(score, correctAnswer, userAnswer);
+  // checkAndScore(score, correctAnswer, userAnswer);
 
   return 1;
 };

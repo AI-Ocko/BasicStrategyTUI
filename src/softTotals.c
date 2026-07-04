@@ -57,7 +57,7 @@ int softTotalTrainer(Score *score, Settings *settings) {
         SoftTotalsS17[playerSecondCard][dealerUpCard - 1], settings);
   }
 
-  checkAndScore(score, correctAnswer, userAnswer);
+  // checkAndScore(score, correctAnswer, userAnswer);
 
   return 1;
 };

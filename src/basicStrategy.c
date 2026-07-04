@@ -5,17 +5,20 @@
 #include <stdlib.h>
 #include <time.h>
 
-void Trainer(WINDOW *win,
+void Trainer(WINDOW *window,
              int (*trainerFunction)(WINDOW *win, Score *score,
                                     Settings *settings),
              Settings *settings) {
   Score score = {0, 0};
   srand(time(NULL));
-  while (trainerFunction(win, &score, settings)) {
+  while (trainerFunction(window, &score, settings)) {
     if (score.total > 0) {
-      printf("\n--- Results ---\n");
-      printf("Score: %d / %d\n", score.correct, score.total);
-      printf("Accuracy: %.1f%%\n\n", (float)score.correct / score.total * 100);
+      mvwprintw(window, 11, 4, "--- Results ---");
+      mvwprintw(window, 13, 4, "Score: %d / %d", score.correct, score.total);
+      mvwprintw(window, 15, 4, "Accuracy: %.1f%%",
+                (float)score.correct / score.total * 100);
+      mvwprintw(window, 19, 20, "Press any key to continue");
+      wgetch(window);
     }
   };
 }
@@ -59,116 +62,159 @@ int main(void) {
 
   // Main menu
   do {
-
     int yMax, xMax;
     getmaxyx(stdscr, yMax, xMax);
 
+    // Menu bar area: border(1) + menu row(1) + border(1) = 3 rows, starting at
+    // y=2
+    int menuTop = 2;
+    int menuHeight = 3;
+
+    WINDOW *menuWindow = newwin(menuHeight, xMax - 4, menuTop, 2);
+    box(menuWindow, 0, 0);
+    // ... menu bar mvwprintw calls stay the same, all at row 0 ...
+
+    wattron(menuWindow, A_STANDOUT);
+    mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_MAIN_MENU, "Main Menu");
+    wattroff(menuWindow, A_STANDOUT);
+    mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING,
+              "(1)Pair Splitting");
+    mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_SOFT_TOTALS, "(2)Soft Totals");
+    mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_HARD_TOTALS, "(3)Hard Totals");
+    mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_SETTINGS, "(4)Settings");
+    mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_EXIT, "(0)Exit");
+
+    // Screen window: starts right after the menu bar (+1 row gap), fills rest
+    // of screen
+    int gap = 1;
+    int screenTop = menuTop + menuHeight + gap;
+    int screenHt = (yMax - 2) - screenTop; // leave 2-row margin at the bottom
+
     // Initialize window and main menu
-    WINDOW *win = newwin(yMax / 2, xMax / 2, yMax / 4, xMax / 4);
-    box(win, 0, 0);
-    wattron(win, A_STANDOUT);
-    mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_MAIN_MENU, "Main Menu");
-    wattroff(win, A_STANDOUT);
-    mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING, "(1)Pair Splitting");
-    mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_SOFT_TOTALS, "(2)Soft Totals");
-    mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_HARD_TOTALS, "(3)Hard Totals");
-    mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_SETTINGS, "(4)Settings");
-    mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_EXIT, "(0)Exit");
+    WINDOW *screenWindow = newwin(screenHt, xMax - 4, screenTop, 2);
+    box(screenWindow, 0, 0);
 
-    wrefresh(win);
+    mvwprintw(screenWindow, 3, 5,
+              "Welcome to the BlackJack Basic Strategy TUI Trainer!");
 
-    menuOption = wgetch(win);
+    wrefresh(menuWindow);
+    wrefresh(screenWindow);
+
+    menuOption = wgetch(menuWindow);
 
     // Trainer options
     switch (menuOption) {
     case '1':
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_MAIN_MENU, "Main Menu");
-      wattron(win, A_STANDOUT);
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING,
+      werase(menuWindow);
+      box(menuWindow, 0, 0);
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_MAIN_MENU, "Main Menu");
+      wattron(menuWindow, A_STANDOUT);
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING,
                 "(1)Pair Splitting");
-      wattroff(win, A_STANDOUT);
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_SOFT_TOTALS, "(2)Soft Totals");
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_HARD_TOTALS, "(3)Hard Totals");
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_SETTINGS, "(4)Settings");
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_EXIT, "(0)Exit");
-      Trainer(win, pairSplittingTrainer, ptrSettings);
+      wattroff(menuWindow, A_STANDOUT);
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_SOFT_TOTALS,
+                "(2)Soft Totals");
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_HARD_TOTALS,
+                "(3)Hard Totals");
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_SETTINGS, "(4)Settings");
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_EXIT, "(Q)uit");
+      wrefresh(menuWindow);
+      Trainer(screenWindow, pairSplittingTrainer, ptrSettings);
       break;
     case '2':
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_MAIN_MENU, "Main Menu");
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING,
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_MAIN_MENU, "Main Menu");
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING,
                 "(1)Pair Splitting");
-      wattron(win, A_STANDOUT);
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_SOFT_TOTALS, "(2)Soft Totals");
-      wattroff(win, A_STANDOUT);
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_HARD_TOTALS, "(3)Hard Totals");
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_SETTINGS, "(4)Settings");
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_EXIT, "(0)Exit");
+      wattron(menuWindow, A_STANDOUT);
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_SOFT_TOTALS,
+                "(2)Soft Totals");
+      wattroff(menuWindow, A_STANDOUT);
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_HARD_TOTALS,
+                "(3)Hard Totals");
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_SETTINGS, "(4)Settings");
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_EXIT, "(0)Exit");
       // Trainer(softTotalTrainer, ptrSettings);
       break;
     case '3':
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_MAIN_MENU, "Main Menu");
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING,
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_MAIN_MENU, "Main Menu");
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING,
                 "(1)Pair Splitting");
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_SOFT_TOTALS, "(2)Soft Totals");
-      wattron(win, A_STANDOUT);
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_HARD_TOTALS, "(3)Hard Totals");
-      wattroff(win, A_STANDOUT);
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_SETTINGS, "(4)Settings");
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_EXIT, "(0)Exit");
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_SOFT_TOTALS,
+                "(2)Soft Totals");
+      wattron(menuWindow, A_STANDOUT);
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_HARD_TOTALS,
+                "(3)Hard Totals");
+      wattroff(menuWindow, A_STANDOUT);
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_SETTINGS, "(4)Settings");
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_EXIT, "(0)Exit");
       // Trainer(hardTotalTrainer, ptrSettings);
       break;
     case '4':
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_MAIN_MENU, "Main Menu");
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING,
-                "(1)Pair Splitting");
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_SOFT_TOTALS, "(2)Soft Totals");
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_HARD_TOTALS, "(3)Hard Totals");
-      wattron(win, A_STANDOUT);
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_SETTINGS, "(4)Settings");
-      wattroff(win, A_STANDOUT);
-      mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_EXIT, "(0)Save and Exit");
-      // Settings menu
       do {
+        // Update Menu Bar
+        werase(menuWindow);
+        box(menuWindow, 0, 0);
+        mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_MAIN_MENU, "Main Menu");
+        mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING,
+                  "(1)Pair Splitting");
+        mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_SOFT_TOTALS,
+                  "(2)Soft Totals");
+        mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_HARD_TOTALS,
+                  "(3)Hard Totals");
+        wattron(menuWindow, A_STANDOUT);
+        mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_SETTINGS, "(4)Settings");
+        wattroff(menuWindow, A_STANDOUT);
+        mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_EXIT, "(0)Save and Exit");
+        wrefresh(menuWindow);
+
+        // Wipe screen for settings menu
+        werase(screenWindow);
+        box(screenWindow, 0, 0);
+        wrefresh(screenWindow);
 
         // Display initial settings
         if (ptrSettings->doubleAfterSplit == 'Y') {
-          mvwprintw(win, 3, 4, "1. Double After Split Enabled? [ Yes ]");
+          mvwprintw(screenWindow, 3, 4,
+                    "1. Double After Split Enabled? [ Yes ]");
         } else {
-          mvwprintw(win, 3, 4, "1. Double After Split Enabled? [ No  ]");
+          mvwprintw(screenWindow, 3, 4,
+                    "1. Double After Split Enabled? [ No  ]");
         }
 
         if (ptrSettings->h17OrS17 == 'H') {
-          mvwprintw(win, 5, 4, "2. Hit-17 or Stand-17? [  Hit  ]");
+          mvwprintw(screenWindow, 5, 4, "2. Hit-17 or Stand-17? [  Hit  ]");
         } else {
-          mvwprintw(win, 5, 4, "2. Hit-17 or Stand-17? [ Stand ]");
+          mvwprintw(screenWindow, 5, 4, "2. Hit-17 or Stand-17? [ Stand ]");
         }
 
         // Toggle settings
-        switch (settingsOption = wgetch(win)) {
+        switch (settingsOption = wgetch(screenWindow)) {
         case '1':
           if (ptrSettings->doubleAfterSplit == 'Y') {
             ptrSettings->doubleAfterSplit = 'N';
-            mvwprintw(win, 3, 4, "1. Double After Split Enabled? [ No  ]");
+            mvwprintw(screenWindow, 3, 4,
+                      "1. Double After Split Enabled? [ No  ]");
           } else {
             ptrSettings->doubleAfterSplit = 'Y';
-            mvwprintw(win, 3, 4, "1. Double After Split Enabled? [ Yes ]");
+            mvwprintw(screenWindow, 3, 4,
+                      "1. Double After Split Enabled? [ Yes ]");
           }
           break;
         case '2':
           if (ptrSettings->h17OrS17 == 'H') {
             ptrSettings->h17OrS17 = 'S';
-            mvwprintw(win, 5, 4, "2. Hit-17 or Stand-17? [ Stand ]");
+            mvwprintw(screenWindow, 5, 4, "2. Hit-17 or Stand-17? [ Stand ]");
           } else {
             ptrSettings->h17OrS17 = 'H';
-            mvwprintw(win, 5, 4, "2. Hit-17 or Stand-17? [  Hit  ]");
+            mvwprintw(screenWindow, 5, 4, "2. Hit-17 or Stand-17? [  Hit  ]");
           }
           break;
         case '0':
           break;
         default:
-          mvwprintw(win, 10, 15, "Please enter a valid option");
-          settingsOption = wgetch(win);
-          mvwprintw(win, 10, 15, "                           ");
+          mvwprintw(screenWindow, 10, 15, "Please enter a valid option");
+          settingsOption = wgetch(screenWindow);
+          mvwprintw(screenWindow, 10, 15, "                           ");
           break;
         }
       } while (settingsOption != '0');
@@ -187,12 +233,13 @@ int main(void) {
     case '0':
       break;
     default:
-      mvwprintw(win, 10, 15, "Invalid input");
+      mvwprintw(screenWindow, 10, 15, "Invalid input");
       break;
     }
 
     // Reset to main menu
-    delwin(win);
+    delwin(menuWindow);
+    delwin(screenWindow);
   } while (menuOption != '0');
 
   endwin();
