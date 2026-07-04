@@ -6,15 +6,15 @@
 
 int dealDealerUpCard() { return rand() % 10 + 1; }
 
-void printDealerUpCard(WINDOW *win, int dealerUpCard) {
+void printDealerUpCard(WINDOW *window, int dealerUpCard) {
   if (dealerUpCard == 1) {
     // printf("Dealer's Up Card is A\n");
-    mvwprintw(win, 5, 4, "Dealer's Up Card is A");
-    wrefresh(win);
+    mvwprintw(window, 5, 4, "Dealer's Up Card is A");
+    wrefresh(window);
   } else {
     // printf("Dealer's Up Card is %d\n", dealerUpCard);
-    mvwprintw(win, 5, 4, "Dealer's Up Card is: %d", dealerUpCard);
-    wrefresh(win);
+    mvwprintw(window, 5, 4, "Dealer's Up Card is: %d", dealerUpCard);
+    wrefresh(window);
   }
 }
 
@@ -42,16 +42,16 @@ char answerToChar(Action a, Settings *settings) {
   }
 }
 
-void checkAndScore(WINDOW *win, Score *score, char correctAnswer,
+void checkAndScore(WINDOW *window, Score *score, char correctAnswer,
                    char userAnswer) {
   score->total++;
 
   if (correctAnswer == toupper(userAnswer)) {
     // printf("Correct!\n");
-    mvwprintw(win, 9, 4, "Correct!");
+    mvwprintw(window, 9, 4, "Correct!");
     score->correct++;
   } else {
     // printf("Incorrect...The correct answer is %c\n", correctAnswer);
-    mvwprintw(win, 9, 4, "The books says to %c", correctAnswer);
+    mvwprintw(window, 9, 4, "The books says to %c", correctAnswer);
   }
 };

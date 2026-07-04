@@ -29,7 +29,7 @@ Action HardTotalsS17[10][10] = {
     /* 16 */ {S, S, S, S, S, H, H, H, H, H},
     /* 17 */ {S, S, S, S, S, S, S, S, S, S}};
 
-int hardTotalTrainer(Score *score, Settings *settings) {
+int hardTotalTrainer(WINDOW *window, Score *score, Settings *settings) {
   int dealerUpCard = dealDealerUpCard(); // shifts value to A(1)-10
   int playerHardTotal =
       (rand() % 10) + 8; // shifts hardtotal to actual range 8-17
@@ -37,13 +37,19 @@ int hardTotalTrainer(Score *score, Settings *settings) {
   char userAnswer;
   char correctAnswer;
 
+  werase(window);
+  box(window, 0, 0);
+  wrefresh(window);
+
   // Print hard total and dealer up card
-  printf("You have a total of %d!\n", playerHardTotal);
-  // printDealerUpCard(dealerUpCard);
+  mvwprintw(window, 3, 4, "You have a total of %d!", playerHardTotal);
+  wrefresh(window);
+  printDealerUpCard(window, dealerUpCard);
 
   // Get user choice
-  printf("Do you (H)it, (D)ouble, (S)tand, or (Q)uit?: ");
-  scanf(" %c", &userAnswer);
+  mvwprintw(window, 7, 4, "Do you (H)it, (D)ouble, (S)tand, or (Q)uit?: ");
+  wrefresh(window);
+  userAnswer = wgetch(window);
 
   // exit
   if (toupper(userAnswer) == 'Q') {
@@ -62,7 +68,7 @@ int hardTotalTrainer(Score *score, Settings *settings) {
   }
 
   // Compare
-  // checkAndScore(score, correctAnswer, userAnswer);
+  checkAndScore(window, score, correctAnswer, userAnswer);
 
   return 1;
 };

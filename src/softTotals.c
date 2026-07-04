@@ -1,6 +1,6 @@
 #include "../include/basicStrategy.h"
 #include <ctype.h>
-#include <stdio.h>
+#include <curses.h>
 #include <stdlib.h>
 
 // Dealer
@@ -25,7 +25,7 @@ Action SoftTotalsS17[8][10] = {
     /* A,8 */ {S, S, S, S, S, S, S, S, S, S},
     /* A,9 */ {S, S, S, S, S, S, S, S, S, S}};
 
-int softTotalTrainer(Score *score, Settings *settings) {
+int softTotalTrainer(WINDOW *window, Score *score, Settings *settings) {
   int dealerUpCard = dealDealerUpCard();
   int playerSecondCard = rand() % 8;
 
@@ -36,13 +36,19 @@ int softTotalTrainer(Score *score, Settings *settings) {
   // Convert int to char
   printPlayerSecondCard = playerSecondCard + '2';
 
-  // Print messages
-  printf("You have A,%c\n", printPlayerSecondCard);
-  // printDealerUpCard(dealerUpCard);
+  werase(window);
+  box(window, 0, 0);
+  wrefresh(window);
+
+  // Print hands
+  mvwprintw(window, 3, 4, "You have A,%c", printPlayerSecondCard);
+  wrefresh(window);
+  printDealerUpCard(window, dealerUpCard);
 
   // Get user choice
-  printf("Do you (H)it, (D)ouble, (S)tand, or (Q)uit?: ");
-  scanf(" %c", &userAnswer);
+  mvwprintw(window, 7, 4, "Do you (H)it, (D)ouble, (S)tand, or (Q)uit?: ");
+  wrefresh(window);
+  userAnswer = wgetch(window);
 
   // exit
   if (toupper(userAnswer) == 'Q') {
@@ -57,7 +63,7 @@ int softTotalTrainer(Score *score, Settings *settings) {
         SoftTotalsS17[playerSecondCard][dealerUpCard - 1], settings);
   }
 
-  // checkAndScore(score, correctAnswer, userAnswer);
+  checkAndScore(window, score, correctAnswer, userAnswer);
 
   return 1;
 };

@@ -12,6 +12,7 @@ void Trainer(WINDOW *window,
   Score score = {0, 0};
   srand(time(NULL));
   while (trainerFunction(window, &score, settings)) {
+    // Print results
     if (score.total > 0) {
       mvwprintw(window, 11, 4, "--- Results ---");
       mvwprintw(window, 13, 4, "Score: %d / %d", score.correct, score.total);
@@ -122,6 +123,8 @@ int main(void) {
       Trainer(screenWindow, pairSplittingTrainer, ptrSettings);
       break;
     case '2':
+      werase(menuWindow);
+      box(menuWindow, 0, 0);
       mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_MAIN_MENU, "Main Menu");
       mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING,
                 "(1)Pair Splitting");
@@ -132,10 +135,13 @@ int main(void) {
       mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_HARD_TOTALS,
                 "(3)Hard Totals");
       mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_SETTINGS, "(4)Settings");
-      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_EXIT, "(0)Exit");
-      // Trainer(softTotalTrainer, ptrSettings);
+      mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_EXIT, "(Q)uit");
+      wrefresh(menuWindow);
+      Trainer(screenWindow, softTotalTrainer, ptrSettings);
       break;
     case '3':
+      werase(menuWindow);
+      box(menuWindow, 0, 0);
       mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_MAIN_MENU, "Main Menu");
       mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING,
                 "(1)Pair Splitting");
@@ -147,7 +153,8 @@ int main(void) {
       wattroff(menuWindow, A_STANDOUT);
       mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_SETTINGS, "(4)Settings");
       mvwprintw(menuWindow, 0, WIDTH_FROM_TOP_LEFT_EXIT, "(0)Exit");
-      // Trainer(hardTotalTrainer, ptrSettings);
+      wrefresh(menuWindow);
+      Trainer(screenWindow, hardTotalTrainer, ptrSettings);
       break;
     case '4':
       do {

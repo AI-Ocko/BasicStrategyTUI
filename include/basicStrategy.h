@@ -26,15 +26,15 @@ typedef enum {
 
 } Action;
 
-int pairSplittingTrainer(WINDOW *win, Score *score, Settings *settings);
-int softTotalTrainer(Score *score, Settings *settings);
-int hardTotalTrainer(Score *score, Settings *settings);
+int pairSplittingTrainer(WINDOW *window, Score *score, Settings *settings);
+int softTotalTrainer(WINDOW *window, Score *score, Settings *settings);
+int hardTotalTrainer(WINDOW *window, Score *score, Settings *settings);
 
 // Trainer Helper Functions
 int dealDealerUpCard(void);
-void printDealerUpCard(WINDOW *win, int dealerUpCard);
+void printDealerUpCard(WINDOW *window, int dealerUpCard);
 char answerToChar(Action a, Settings *settings);
-void checkAndScore(WINDOW *win, Score *score, char correctAnswer,
+void checkAndScore(WINDOW *window, Score *score, char correctAnswer,
                    char userAnswer);
 
 extern Action HardTotalsH17[10][10];
