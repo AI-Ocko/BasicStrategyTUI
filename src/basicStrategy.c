@@ -5,11 +5,13 @@
 #include <stdlib.h>
 #include <time.h>
 
-void Trainer(int (*trainerFunction)(Score *score, Settings *settings),
+void Trainer(WINDOW *win,
+             int (*trainerFunction)(WINDOW *win, Score *score,
+                                    Settings *settings),
              Settings *settings) {
   Score score = {0, 0};
   srand(time(NULL));
-  while (trainerFunction(&score, settings)) {
+  while (trainerFunction(win, &score, settings)) {
     if (score.total > 0) {
       printf("\n--- Results ---\n");
       printf("Score: %d / %d\n", score.correct, score.total);
@@ -89,7 +91,7 @@ int main(void) {
       mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_HARD_TOTALS, "(3)Hard Totals");
       mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_SETTINGS, "(4)Settings");
       mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_EXIT, "(0)Exit");
-      // Trainer(pairSplittingTrainer, ptrSettings);
+      Trainer(win, pairSplittingTrainer, ptrSettings);
       break;
     case '2':
       mvwprintw(win, 0, WIDTH_FROM_TOP_LEFT_MAIN_MENU, "Main Menu");

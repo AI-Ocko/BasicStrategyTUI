@@ -24,7 +24,7 @@ int surrender[3][10] = {
     /* 16 */ {0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
 };
 
-int pairSplittingTrainer(Score *score, Settings *settings) {
+int pairSplittingTrainer(WINDOW *win, Score *score, Settings *settings) {
   char printPlayerPair;
   char userAnswer;
   char correctAnswer;
@@ -42,11 +42,15 @@ int pairSplittingTrainer(Score *score, Settings *settings) {
 
   // Print messages
   if (printPlayerPair == 'A') {
-    printf("You have a pair of %c's!\n", printPlayerPair);
+    // printf("You have a pair of %c's!\n", printPlayerPair);
+    mvwprintw(win, 3, 4, "You have a pair of %c's!", printPlayerPair);
+    wrefresh(win);
   } else {
-    printf("You have a pair of %d's!\n", printPlayerPair);
+    // printf("You have a pair of %d's!\n", printPlayerPair);
+    mvwprintw(win, 3, 4, "You have a pair of %d's!", printPlayerPair);
+    wrefresh(win);
   }
-  printDealerUpCard(dealerUpCard);
+  printDealerUpCard(win, dealerUpCard);
 
   // Get user choice
   printf("Do you split? (Y)es, (N)o, or (Q)uit: ");

@@ -38,7 +38,7 @@ int softTotalTrainer(Score *score, Settings *settings) {
 
   // Print messages
   printf("You have A,%c\n", printPlayerSecondCard);
-  printDealerUpCard(dealerUpCard);
+  // printDealerUpCard(dealerUpCard);
 
   // Get user choice
   printf("Do you (H)it, (D)ouble, (S)tand, or (Q)uit?: ");

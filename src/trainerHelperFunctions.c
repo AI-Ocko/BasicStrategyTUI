@@ -1,15 +1,18 @@
 #include "../include/basicStrategy.h"
 #include <ctype.h>
+#include <curses.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 int dealDealerUpCard() { return rand() % 10 + 1; }
 
-void printDealerUpCard(int dealerUpCard) {
+void printDealerUpCard(WINDOW *win, int dealerUpCard) {
   if (dealerUpCard == 1) {
-    printf("Dealer's Up Card is A\n");
+    // printf("Dealer's Up Card is A\n");
+    mvwprintw(win, 5, 4, "Dealer's Up Card is A");
   } else {
-    printf("Dealer's Up Card is %d\n", dealerUpCard);
+    // printf("Dealer's Up Card is %d\n", dealerUpCard);
+    mvwprintw(win, 5, 4, "Dealer's Up Card is: %c", dealerUpCard);
   }
 }
 

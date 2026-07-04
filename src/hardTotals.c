@@ -39,7 +39,7 @@ int hardTotalTrainer(Score *score, Settings *settings) {
 
   // Print hard total and dealer up card
   printf("You have a total of %d!\n", playerHardTotal);
-  printDealerUpCard(dealerUpCard);
+  // printDealerUpCard(dealerUpCard);
 
   // Get user choice
   printf("Do you (H)it, (D)ouble, (S)tand, or (Q)uit?: ");
