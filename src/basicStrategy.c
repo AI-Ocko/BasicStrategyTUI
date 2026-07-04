@@ -10,7 +10,6 @@ void Trainer(WINDOW *window,
                                     Settings *settings),
              Settings *settings) {
   Score score = {0, 0};
-  srand(time(NULL));
   while (trainerFunction(window, &score, settings)) {
     // Print results
     if (score.total > 0) {
@@ -60,6 +59,9 @@ int main(void) {
   noecho();             // don't echo typed keys automatically
   keypad(stdscr, TRUE); // enable arrow keys, F-keys, etc.
   curs_set(0);          // hides the terminal cursor
+
+  // Random seed
+  srand(time(NULL));
 
   // Main menu
   do {

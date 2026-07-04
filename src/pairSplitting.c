@@ -46,11 +46,9 @@ int pairSplittingTrainer(WINDOW *window, Score *score, Settings *settings) {
 
   // Print messages
   if (printPlayerPair == 'A') {
-    // printf("You have a pair of %c's!\n", printPlayerPair);
     mvwprintw(window, 3, 4, "You have a pair of %c's!", printPlayerPair);
     wrefresh(window);
   } else {
-    // printf("You have a pair of %d's!\n", printPlayerPair);
     mvwprintw(window, 3, 4, "You have a pair of %d's!", printPlayerPair);
     wrefresh(window);
   }
