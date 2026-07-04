@@ -10,4 +10,4 @@ Simply go to the root of the project, and run `make all`, then run `./bin/basicS
 
 ### TODO
 
-1. Migrate the trainers to use ncurses
+1. Add some flair. Maybe some more side bars displaying your stats. ASCII art, or even animations?
