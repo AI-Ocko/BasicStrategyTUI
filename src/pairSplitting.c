@@ -65,8 +65,8 @@ int pairSplittingTrainer(WINDOW *window, Score *score, Settings *settings) {
   }
 
   // Check correct answer
-  correctAnswer =
-      answerToChar(PairSplitting[playerPair - 1][dealerUpCard - 1], settings);
+  correctAnswer = answerToChar(
+      window, PairSplitting[playerPair - 1][dealerUpCard - 1], settings);
 
   // Compare correct answer with user answer
   checkAndScore(window, score, correctAnswer, userAnswer);

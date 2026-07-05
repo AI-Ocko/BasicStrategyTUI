@@ -14,6 +14,9 @@
 #define SCREEN_LINE_2 5
 #define SCREEN_LINE_3 7
 #define SCREEN_LINE_4 9
+#define SCREEN_LINE_5 11
+#define SCREEN_LINE_6 13
+#define SCREEN_LINE_7 15
 #define SCREEN_MARGIN 4
 
 #endif

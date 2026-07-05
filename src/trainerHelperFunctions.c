@@ -1,24 +1,22 @@
 #include "../include/basicStrategy.h"
+#include "../include/init_scr.h"
 #include <ctype.h>
 #include <curses.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 int dealDealerUpCard() { return rand() % 10 + 1; }
 
 void printDealerUpCard(WINDOW *window, int dealerUpCard) {
   if (dealerUpCard == 1) {
-    // printf("Dealer's Up Card is A\n");
     mvwprintw(window, 5, 4, "Dealer's Up Card is A");
     wrefresh(window);
   } else {
-    // printf("Dealer's Up Card is %d\n", dealerUpCard);
     mvwprintw(window, 5, 4, "Dealer's Up Card is: %d", dealerUpCard);
     wrefresh(window);
   }
 }
 
-char answerToChar(Action a, Settings *settings) {
+char answerToChar(WINDOW *window, Action a, Settings *settings) {
   switch (a) {
   case H:
     return 'H';
@@ -37,7 +35,8 @@ char answerToChar(Action a, Settings *settings) {
   case Surr:
     return 's';
   default:
-    printf("Error, could not print answer.\n");
+    mvwprintw(window, SCREEN_LINE_7, SCREEN_MARGIN,
+              "Error, could not print answer.");
     return '?';
   }
 }
@@ -47,11 +46,9 @@ void checkAndScore(WINDOW *window, Score *score, char correctAnswer,
   score->total++;
 
   if (correctAnswer == toupper(userAnswer)) {
-    // printf("Correct!\n");
     mvwprintw(window, 9, 4, "Correct!");
     score->correct++;
   } else {
-    // printf("Incorrect...The correct answer is %c\n", correctAnswer);
     mvwprintw(window, 9, 4, "Incorrect... The correct answer is: %c",
               correctAnswer);
   }

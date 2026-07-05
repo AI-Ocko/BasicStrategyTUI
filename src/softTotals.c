@@ -57,10 +57,10 @@ int softTotalTrainer(WINDOW *window, Score *score, Settings *settings) {
 
   if (settings->h17OrS17 == 'H') {
     correctAnswer = answerToChar(
-        SoftTotalsH17[playerSecondCard][dealerUpCard - 1], settings);
+        window, SoftTotalsH17[playerSecondCard][dealerUpCard - 1], settings);
   } else {
     correctAnswer = answerToChar(
-        SoftTotalsS17[playerSecondCard][dealerUpCard - 1], settings);
+        window, SoftTotalsS17[playerSecondCard][dealerUpCard - 1], settings);
   }
 
   checkAndScore(window, score, correctAnswer, userAnswer);

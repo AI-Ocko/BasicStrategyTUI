@@ -33,7 +33,7 @@ int hardTotalTrainer(WINDOW *window, Score *score, Settings *settings);
 // Trainer Helper Functions
 int dealDealerUpCard(void);
 void printDealerUpCard(WINDOW *window, int dealerUpCard);
-char answerToChar(Action a, Settings *settings);
+char answerToChar(WINDOW *window, Action a, Settings *settings);
 void checkAndScore(WINDOW *window, Score *score, char correctAnswer,
                    char userAnswer);
 

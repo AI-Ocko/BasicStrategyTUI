@@ -13,9 +13,10 @@ void Trainer(WINDOW *window,
   while (trainerFunction(window, &score, settings)) {
     // Print results
     if (score.total > 0) {
-      mvwprintw(window, 11, 4, "--- Results ---");
-      mvwprintw(window, 13, 4, "Score: %d / %d", score.correct, score.total);
-      mvwprintw(window, 15, 4, "Accuracy: %.1f%%",
+      mvwprintw(window, SCREEN_LINE_5, SCREEN_MARGIN, "--- Results ---");
+      mvwprintw(window, SCREEN_LINE_6, SCREEN_MARGIN, "Score: %d / %d",
+                score.correct, score.total);
+      mvwprintw(window, SCREEN_LINE_7, SCREEN_MARGIN, "Accuracy: %.1f%%",
                 (float)score.correct / score.total * 100);
       mvwprintw(window, 19, 20, "Press any key to continue");
       wgetch(window);
@@ -106,6 +107,14 @@ int main(void) {
     mvwprintw(
         screenWindow, SCREEN_LINE_2, SCREEN_MARGIN,
         "Press the key of the (H)ighlighted character to go to that menu");
+    mvwprintw(screenWindow, SCREEN_LINE_3, SCREEN_MARGIN,
+              "(1)Pair Splitting Trainer");
+    mvwprintw(screenWindow, SCREEN_LINE_4, SCREEN_MARGIN,
+              "(2)Soft Totals Trainer");
+    mvwprintw(screenWindow, SCREEN_LINE_5, SCREEN_MARGIN,
+              "(3)Hard Totals Trainer");
+    mvwprintw(screenWindow, SCREEN_LINE_6, SCREEN_MARGIN, "(4)Settings");
+    mvwprintw(screenWindow, SCREEN_LINE_7, SCREEN_MARGIN, "(0)Exit");
 
     wrefresh(menuWindow);
     wrefresh(screenWindow);
@@ -167,7 +176,7 @@ int main(void) {
       wattroff(menuWindow, A_STANDOUT);
       mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_SETTINGS,
                 "(4)Settings");
-      mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_EXIT, "(0)Exit");
+      mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_EXIT, "(Q)uit");
       wrefresh(menuWindow);
       Trainer(screenWindow, hardTotalTrainer, ptrSettings);
       break;
@@ -266,7 +275,7 @@ int main(void) {
     case '0':
       break;
     default:
-      mvwprintw(screenWindow, 10, 15, "Invalid input");
+      mvwprintw(screenWindow, SCREEN_LINE_5, 15, "Invalid input");
       break;
     }
 

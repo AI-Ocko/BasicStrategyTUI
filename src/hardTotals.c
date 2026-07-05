@@ -1,6 +1,6 @@
 #include "../include/basicStrategy.h"
+#include "../include/init_scr.h"
 #include <ctype.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 // Dealer
@@ -59,12 +59,14 @@ int hardTotalTrainer(WINDOW *window, Score *score, Settings *settings) {
   // Check correct answer
   if (settings->h17OrS17 == 'H') {
     correctAnswer = answerToChar(
-        HardTotalsH17[playerHardTotal - 8][dealerUpCard - 1], settings);
+        window, HardTotalsH17[playerHardTotal - 8][dealerUpCard - 1], settings);
   } else if (settings->h17OrS17 == 'S') {
     correctAnswer = answerToChar(
-        HardTotalsS17[playerHardTotal - 8][dealerUpCard - 1], settings);
+        window, HardTotalsS17[playerHardTotal - 8][dealerUpCard - 1], settings);
   } else {
-    printf("Error. Please check settings.\n");
+    mvwprintw(window, SCREEN_LINE_7, SCREEN_MARGIN,
+              "Error. Please check settings.");
+    return 0;
   }
 
   // Compare
