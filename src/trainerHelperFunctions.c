@@ -52,6 +52,7 @@ void checkAndScore(WINDOW *window, Score *score, char correctAnswer,
     score->correct++;
   } else {
     // printf("Incorrect...The correct answer is %c\n", correctAnswer);
-    mvwprintw(window, 9, 4, "The books says to %c", correctAnswer);
+    mvwprintw(window, 9, 4, "Incorrect... The correct answer is: %c",
+              correctAnswer);
   }
 };
