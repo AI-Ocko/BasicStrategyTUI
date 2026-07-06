@@ -63,35 +63,26 @@ static void printMenuBar(WINDOW *window, int MenuHighlight,
   wrefresh(window);
 };
 
+static void loadSettings(FILE *FilePointer, WINDOW *window, Settings settings) {
+  if (FilePointer != NULL) {
+    settings.doubleAfterSplit = fgetc(FilePointer);
+    settings.h17OrS17 = fgetc(FilePointer);
+  } else {
+    werase(window);
+    mvwprintw(window, SCREEN_MARGIN, SCREEN_LINE_1,
+              "Error accessing settings. Proceeding wtih defaults. Press any "
+              "key to continue...");
+    wgetch(window);
+    settings.doubleAfterSplit = 'Y';
+    settings.h17OrS17 = 'H';
+    fputc(settings.h17OrS17, FilePointer);
+    fputc(settings.doubleAfterSplit, FilePointer);
+  }
+}
+
 int main(void) {
   char menuOption;
   char settingsOption;
-
-  // Open settings and save settings to struct inside main()
-  FILE *settingsFilePointer;
-  Settings settings;
-  settingsFilePointer = fopen("settings.txt", "r");
-  if (settingsFilePointer == NULL) {
-    printf("No settings found. Setting default settings.\n");
-    settings.doubleAfterSplit = 'Y';
-    settings.h17OrS17 = 'H';
-    settingsFilePointer = fopen("settings.txt", "w");
-    if (settingsFilePointer != NULL) {
-      fputc(settings.doubleAfterSplit, settingsFilePointer);
-      fputc(settings.h17OrS17, settingsFilePointer);
-      fclose(settingsFilePointer);
-    } else {
-      printf("*Gulp* Uh...Boss? You might want to take a look at this\n");
-      return 1;
-    }
-  } else {
-    // Save settings.txt information to local struct pointer
-    settings.doubleAfterSplit = fgetc(settingsFilePointer);
-    settings.h17OrS17 = fgetc(settingsFilePointer);
-    fclose(settingsFilePointer);
-  }
-
-  Settings *ptrSettings = &settings;
 
   // Initialize ncurses
   initscr();            // Start ncurses mode, creates stdscr
@@ -145,7 +136,15 @@ int main(void) {
     wrefresh(menuWindow);
     wrefresh(screenWindow);
 
-    menuOption = wgetch(menuWindow);
+    // Open settings and save settings to struct inside main()
+    FILE *settingsFilePointer;
+    Settings settings;
+    settingsFilePointer = fopen("settings.txt", "r");
+    loadSettings(settingsFilePointer, screenWindow, settings);
+    fclose(settingsFilePointer);
+    Settings *ptrSettings = &settings;
+
+    menuOption = wgetch(screenWindow);
 
     // Trainer options
     switch (menuOption) {
