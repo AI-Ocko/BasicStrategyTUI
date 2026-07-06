@@ -5,6 +5,11 @@
 #include <stdlib.h>
 #include <time.h>
 
+// Trainer loader:
+// Takes trainer function (pairSplittingTrainer, softTotalTrainer,
+// hardTotalTrainer).
+// Takes pointer to settings struct Runs trainer function
+// with ability to read settings to check for correct answers
 static void Trainer(WINDOW *window,
                     int (*trainerFunction)(WINDOW *win, Score *score,
                                            Settings *settings),
@@ -24,6 +29,7 @@ static void Trainer(WINDOW *window,
   };
 }
 
+// Options for printMenuBar
 typedef enum {
   HIGHLIGHT_MAIN_MENU = 0,
   HIGHLIGHT_PAIR_SPLITTING = 1,
@@ -32,6 +38,7 @@ typedef enum {
   HIGHLIGHT_SETTINGS = 4
 } MenuHighlight;
 
+// Print Highlighted Toggled Menu
 static void printMenuBar(WINDOW *window, int MenuHighlight,
                          const char *exitLabel) {
   static const struct {
@@ -63,6 +70,7 @@ static void printMenuBar(WINDOW *window, int MenuHighlight,
   wrefresh(window);
 };
 
+// Read settings.txt file and save it to struct
 static void loadSettings(FILE *FilePointer, WINDOW *window, Settings settings) {
   if (FilePointer != NULL) {
     settings.doubleAfterSplit = fgetc(FilePointer);
@@ -115,7 +123,7 @@ int main(void) {
     int screenTop = menuTop + menuHeight + gap;
     int screenHt = (yMax - 2) - screenTop; // leave 2-row margin at the bottom
 
-    // Initialize window and main menu screen
+    // Initialize window and print main menu screen
     WINDOW *screenWindow = newwin(screenHt - 2, xMax - 4, screenTop, 2);
     box(screenWindow, 0, 0);
 
@@ -243,7 +251,7 @@ int main(void) {
       break;
     }
 
-    // Reset to main menu
+    // Reset to main menu on next loop
     delwin(menuWindow);
     delwin(screenWindow);
   } while (menuOption != '0');
