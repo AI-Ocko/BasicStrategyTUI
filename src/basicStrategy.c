@@ -5,10 +5,10 @@
 #include <stdlib.h>
 #include <time.h>
 
-void Trainer(WINDOW *window,
-             int (*trainerFunction)(WINDOW *win, Score *score,
-                                    Settings *settings),
-             Settings *settings) {
+static void Trainer(WINDOW *window,
+                    int (*trainerFunction)(WINDOW *win, Score *score,
+                                           Settings *settings),
+                    Settings *settings) {
   Score score = {0, 0};
   while (trainerFunction(window, &score, settings)) {
     // Print results
@@ -23,6 +23,45 @@ void Trainer(WINDOW *window,
     }
   };
 }
+
+typedef enum {
+  HIGHLIGHT_MAIN_MENU = 0,
+  HIGHLIGHT_PAIR_SPLITTING = 1,
+  HIGHLIGHT_SOFT_TOTALS = 2,
+  HIGHTLIGHT_HARD_TOTALS = 3,
+  HIGHLIGHT_SETTINGS = 4
+} MenuHighlight;
+
+static void printMenuBar(WINDOW *window, int MenuHighlight,
+                         const char *exitLabel) {
+  static const struct {
+    int x;
+    const char *menuLabel;
+  } MenuLabel[] = {
+      {WIDTH_FROM_TOP_LEFT_MAIN_MENU, "Main Menu"},
+      {WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING, "(1)Pair Splittings"},
+      {WIDTH_FROM_TOP_LEFT_SOFT_TOTALS, "(2)Soft Totals"},
+      {WIDTH_FROM_TOP_LEFT_HARD_TOTALS, "(3)Hard Totals"},
+      {WIDTH_FROM_TOP_LEFT_SETTINGS, "(4)Settings"},
+  };
+  const int numberOfMenuLabels = sizeof(MenuLabel) / sizeof(MenuLabel[0]);
+
+  werase(window);
+  box(window, 0, 0);
+
+  for (int i = 0; i < numberOfMenuLabels; i++) {
+    if (i == MenuHighlight) {
+      wattron(window, A_STANDOUT);
+    }
+    mvwprintw(window, MENU_MARGIN, MenuLabel[i].x, "%s",
+              MenuLabel[i].menuLabel);
+    if (i == MenuHighlight) {
+      wattroff(window, A_STANDOUT);
+    }
+  }
+  mvwprintw(window, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_EXIT, "%s", exitLabel);
+  wrefresh(window);
+};
 
 int main(void) {
   char menuOption;
@@ -76,21 +115,8 @@ int main(void) {
 
     WINDOW *menuWindow = newwin(menuHeight + 2, xMax - 4, menuTop, 2);
     box(menuWindow, 0, 0);
-    // ... menu bar mvwprintw calls stay the same, all at row 0 ...
 
-    wattron(menuWindow, A_STANDOUT);
-    mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_MAIN_MENU,
-              "Main Menu");
-    wattroff(menuWindow, A_STANDOUT);
-    mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING,
-              "(1)Pair Splitting");
-    mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_SOFT_TOTALS,
-              "(2)Soft Totals");
-    mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_HARD_TOTALS,
-              "(3)Hard Totals");
-    mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_SETTINGS,
-              "(4)Settings");
-    mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_EXIT, "(0)Exit");
+    printMenuBar(menuWindow, HIGHLIGHT_MAIN_MENU, "(0)Exit");
 
     // Screen window: starts right after the menu bar (+1 row gap), fills rest
     // of screen
@@ -124,82 +150,21 @@ int main(void) {
     // Trainer options
     switch (menuOption) {
     case '1':
-      werase(menuWindow);
-      box(menuWindow, 0, 0);
-      mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_MAIN_MENU,
-                "Main Menu");
-      wattron(menuWindow, A_STANDOUT);
-      mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING,
-                "(1)Pair Splitting");
-      wattroff(menuWindow, A_STANDOUT);
-      mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_SOFT_TOTALS,
-                "(2)Soft Totals");
-      mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_HARD_TOTALS,
-                "(3)Hard Totals");
-      mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_SETTINGS,
-                "(4)Settings");
-      mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_EXIT, "(Q)uit");
-      wrefresh(menuWindow);
+      printMenuBar(menuWindow, HIGHLIGHT_PAIR_SPLITTING, "(Q)uit");
       Trainer(screenWindow, pairSplittingTrainer, ptrSettings);
       break;
     case '2':
-      werase(menuWindow);
-      box(menuWindow, 0, 0);
-      mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_MAIN_MENU,
-                "Main Menu");
-      mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING,
-                "(1)Pair Splitting");
-      wattron(menuWindow, A_STANDOUT);
-      mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_SOFT_TOTALS,
-                "(2)Soft Totals");
-      wattroff(menuWindow, A_STANDOUT);
-      mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_HARD_TOTALS,
-                "(3)Hard Totals");
-      mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_SETTINGS,
-                "(4)Settings");
-      mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_EXIT, "(Q)uit");
-      wrefresh(menuWindow);
+      printMenuBar(menuWindow, HIGHLIGHT_SOFT_TOTALS, "(Q)uit");
       Trainer(screenWindow, softTotalTrainer, ptrSettings);
       break;
     case '3':
-      werase(menuWindow);
-      box(menuWindow, 0, 0);
-      mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_MAIN_MENU,
-                "Main Menu");
-      mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING,
-                "(1)Pair Splitting");
-      mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_SOFT_TOTALS,
-                "(2)Soft Totals");
-      wattron(menuWindow, A_STANDOUT);
-      mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_HARD_TOTALS,
-                "(3)Hard Totals");
-      wattroff(menuWindow, A_STANDOUT);
-      mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_SETTINGS,
-                "(4)Settings");
-      mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_EXIT, "(Q)uit");
-      wrefresh(menuWindow);
+      printMenuBar(menuWindow, HIGHTLIGHT_HARD_TOTALS, "(Q)uit");
       Trainer(screenWindow, hardTotalTrainer, ptrSettings);
       break;
     case '4':
       do {
         // Update Menu Bar
-        werase(menuWindow);
-        box(menuWindow, 0, 0);
-        mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_MAIN_MENU,
-                  "Main Menu");
-        mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_PAIR_SPLITTING,
-                  "(1)Pair Splitting");
-        mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_SOFT_TOTALS,
-                  "(2)Soft Totals");
-        mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_HARD_TOTALS,
-                  "(3)Hard Totals");
-        wattron(menuWindow, A_STANDOUT);
-        mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_SETTINGS,
-                  "(4)Settings");
-        wattroff(menuWindow, A_STANDOUT);
-        mvwprintw(menuWindow, MENU_MARGIN, WIDTH_FROM_TOP_LEFT_EXIT,
-                  "(0)Save and Exit");
-        wrefresh(menuWindow);
+        printMenuBar(menuWindow, HIGHLIGHT_SETTINGS, "(0)Save and Exit");
 
         // Wipe screen for settings menu
         werase(screenWindow);
