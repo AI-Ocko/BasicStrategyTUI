@@ -1,4 +1,5 @@
 #include "../include/basicStrategy.h"
+#include "../include/init_scr.h"
 #include <ctype.h>
 #include <curses.h>
 #include <stdlib.h>
@@ -46,22 +47,36 @@ int pairSplittingTrainer(WINDOW *window, Score *score, Settings *settings) {
 
   // Print messages
   if (printPlayerPair == 'A') {
-    mvwprintw(window, 3, 4, "You have a pair of %c's!", printPlayerPair);
+    mvwprintw(window, SCREEN_LINE_1, SCREEN_MARGIN, "You have a pair of %c's!",
+              printPlayerPair);
     wrefresh(window);
   } else {
-    mvwprintw(window, 3, 4, "You have a pair of %d's!", printPlayerPair);
+    mvwprintw(window, SCREEN_LINE_1, SCREEN_MARGIN, "You have a pair of %d's!",
+              printPlayerPair);
     wrefresh(window);
   }
-  printDealerUpCard(window, dealerUpCard);
+
+  printDealerUpCard(window, dealerUpCard); // prints on SCREEN_LINE_2
 
   // Get user choice
-  mvwprintw(window, 7, 4, "Do you split? (Y)es, (N)o, or (Q)uit: ");
+  mvwprintw(window, SCREEN_LINE_3, SCREEN_MARGIN,
+            "Do you split? (Y)es, (N)o, or (Q)uit: ");
   wrefresh(window);
   userAnswer = wgetch(window);
 
   // exit
   if (toupper(userAnswer) == 'Q') {
     return 0;
+  }
+
+  // Check misinput ("It was a misinput it was A MISINPUT... CALM DOWN,
+  // YOU CALM THE FUCK DOWN")
+  while (userAnswer != 'y' && userAnswer != 'n') {
+    mvwprintw(window, SCREEN_LINE_7, SCREEN_MARGIN,
+              "Invalid input... please answer again.");
+    userAnswer = wgetch(window);
+    mvwprintw(window, SCREEN_LINE_7, SCREEN_MARGIN,
+              "                                     ");
   }
 
   // Check correct answer

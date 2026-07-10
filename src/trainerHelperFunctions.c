@@ -8,10 +8,11 @@ int dealDealerUpCard() { return rand() % 10 + 1; }
 
 void printDealerUpCard(WINDOW *window, int dealerUpCard) {
   if (dealerUpCard == 1) {
-    mvwprintw(window, 5, 4, "Dealer's Up Card is A");
+    mvwprintw(window, SCREEN_LINE_2, SCREEN_MARGIN, "Dealer's Up Card is A");
     wrefresh(window);
   } else {
-    mvwprintw(window, 5, 4, "Dealer's Up Card is: %d", dealerUpCard);
+    mvwprintw(window, SCREEN_LINE_2, SCREEN_MARGIN, "Dealer's Up Card is: %d",
+              dealerUpCard);
     wrefresh(window);
   }
 }
@@ -46,10 +47,10 @@ void checkAndScore(WINDOW *window, Score *score, char correctAnswer,
   score->total++;
 
   if (correctAnswer == toupper(userAnswer)) {
-    mvwprintw(window, 9, 4, "Correct!");
+    mvwprintw(window, SCREEN_LINE_4, SCREEN_MARGIN, "Correct!");
     score->correct++;
   } else {
-    mvwprintw(window, 9, 4, "Incorrect... The correct answer is: %c",
-              correctAnswer);
+    mvwprintw(window, SCREEN_LINE_4, SCREEN_MARGIN,
+              "Incorrect... The correct answer is: %c", correctAnswer);
   }
 };
