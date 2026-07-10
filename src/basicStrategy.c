@@ -88,6 +88,7 @@ static void loadSettings(FILE *FilePointer, WINDOW *window,
     settings->h17OrS17 = 'H';
     fputc(settings->h17OrS17, FilePointer);
     fputc(settings->doubleAfterSplit, FilePointer);
+    fclose(FilePointer);
   }
 }
 
