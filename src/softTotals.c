@@ -1,4 +1,5 @@
 #include "../include/basicStrategy.h"
+#include "../include/init_scr.h"
 #include <ctype.h>
 #include <curses.h>
 #include <stdlib.h>
@@ -41,12 +42,15 @@ int softTotalTrainer(WINDOW *window, Score *score, Settings *settings) {
   wrefresh(window);
 
   // Print hands
-  mvwprintw(window, 3, 4, "You have A,%c", printPlayerSecondCard);
+  mvwprintw(window, SCREEN_LINE_1, SCREEN_MARGIN, "You have A,%c",
+            printPlayerSecondCard);
   wrefresh(window);
-  printDealerUpCard(window, dealerUpCard);
+
+  printDealerUpCard(window, dealerUpCard); // prints on SCREEN_LINE_2
 
   // Get user choice
-  mvwprintw(window, 7, 4, "Do you (H)it, (D)ouble, (S)tand, or (Q)uit?: ");
+  mvwprintw(window, SCREEN_LINE_3, SCREEN_MARGIN,
+            "Do you (H)it, (D)ouble, (S)tand, or (Q)uit?: ");
   wrefresh(window);
   userAnswer = wgetch(window);
 
@@ -55,6 +59,16 @@ int softTotalTrainer(WINDOW *window, Score *score, Settings *settings) {
     return 0;
   }
 
+  // Check for invalid input
+  while (userAnswer != 'h' && userAnswer != 'd' && userAnswer != 's') {
+    mvwprintw(window, SCREEN_LINE_7, SCREEN_MARGIN,
+              "Invalid input... please answer again.");
+    userAnswer = wgetch(window);
+    mvwprintw(window, SCREEN_LINE_7, SCREEN_MARGIN,
+              "                                     ");
+  }
+
+  // Check userAnswer against correctAnswer
   if (settings->h17OrS17 == 'H') {
     correctAnswer = answerToChar(
         window, SoftTotalsH17[playerSecondCard][dealerUpCard - 1], settings);
@@ -63,6 +77,7 @@ int softTotalTrainer(WINDOW *window, Score *score, Settings *settings) {
         window, SoftTotalsS17[playerSecondCard][dealerUpCard - 1], settings);
   }
 
+  // Print results
   checkAndScore(window, score, correctAnswer, userAnswer);
 
   return 1;

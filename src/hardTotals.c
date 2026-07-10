@@ -42,18 +42,29 @@ int hardTotalTrainer(WINDOW *window, Score *score, Settings *settings) {
   wrefresh(window);
 
   // Print hard total and dealer up card
-  mvwprintw(window, 3, 4, "You have a total of %d!", playerHardTotal);
+  mvwprintw(window, SCREEN_LINE_1, SCREEN_MARGIN, "You have a total of %d!",
+            playerHardTotal);
   wrefresh(window);
-  printDealerUpCard(window, dealerUpCard);
+
+  printDealerUpCard(window, dealerUpCard); // prints on SCREEN_LINE_2
 
   // Get user choice
-  mvwprintw(window, 7, 4, "Do you (H)it, (D)ouble, (S)tand, or (Q)uit?: ");
+  mvwprintw(window, SCREEN_LINE_3, 4,
+            "Do you (H)it, (D)ouble, (S)tand, or (Q)uit?: ");
   wrefresh(window);
   userAnswer = wgetch(window);
 
   // exit
   if (toupper(userAnswer) == 'Q') {
     return 0;
+  }
+
+  while (userAnswer != 'h' && userAnswer != 's' && userAnswer != 'd') {
+    mvwprintw(window, SCREEN_LINE_7, SCREEN_MARGIN,
+              "Invalid input... please answer again.");
+    userAnswer = wgetch(window);
+    mvwprintw(window, SCREEN_LINE_7, SCREEN_MARGIN,
+              "                                     ");
   }
 
   // Check correct answer
