@@ -71,20 +71,23 @@ static void printMenuBar(WINDOW *window, int MenuHighlight,
 };
 
 // Read settings.txt file and save it to struct
-static void loadSettings(FILE *FilePointer, WINDOW *window, Settings settings) {
+static void loadSettings(FILE *FilePointer, WINDOW *window,
+                         Settings *settings) {
   if (FilePointer != NULL) {
-    settings.doubleAfterSplit = fgetc(FilePointer);
-    settings.h17OrS17 = fgetc(FilePointer);
+    settings->doubleAfterSplit = fgetc(FilePointer);
+    settings->h17OrS17 = fgetc(FilePointer);
   } else {
+    // If no settings are found, proceed with defaults
     werase(window);
     mvwprintw(window, SCREEN_MARGIN, SCREEN_LINE_1,
               "Error accessing settings. Proceeding wtih defaults. Press any "
               "key to continue...");
     wgetch(window);
-    settings.doubleAfterSplit = 'Y';
-    settings.h17OrS17 = 'H';
-    fputc(settings.h17OrS17, FilePointer);
-    fputc(settings.doubleAfterSplit, FilePointer);
+    FilePointer = fopen("settings.txt", "w");
+    settings->doubleAfterSplit = 'Y';
+    settings->h17OrS17 = 'H';
+    fputc(settings->h17OrS17, FilePointer);
+    fputc(settings->doubleAfterSplit, FilePointer);
   }
 }
 
@@ -147,10 +150,10 @@ int main(void) {
     // Open settings and save settings to struct inside main()
     FILE *settingsFilePointer;
     Settings settings;
-    settingsFilePointer = fopen("settings.txt", "r");
-    loadSettings(settingsFilePointer, screenWindow, settings);
-    fclose(settingsFilePointer);
     Settings *ptrSettings = &settings;
+    settingsFilePointer = fopen("settings.txt", "r");
+    loadSettings(settingsFilePointer, screenWindow, &settings);
+    fclose(settingsFilePointer);
 
     menuOption = wgetch(screenWindow);
 
@@ -241,6 +244,7 @@ int main(void) {
         fclose(settingsFilePointer);
       } else {
         printf("Something went wrong opening settings file\n");
+        fclose(settingsFilePointer);
         break;
       }
       break;
