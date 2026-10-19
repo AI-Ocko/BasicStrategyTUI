@@ -22,8 +22,11 @@ void printCenteredText(WINDOW *window, int row, int windowWidth,
 static const struct {
   const char *optionsName;
 } Options[] = {
-    {"Pair Splitting"}, {"Soft Totals"}, {"Hard Totals"},
-    {"Full Game"},      {"Settings"},
+    {"Pair Splitting"},
+    {"Soft Totals"},
+    {"Hard Totals"},
+    // {"Full Game"},
+    {"Settings"},
 };
 
 static const int numberOfOptions = sizeof(Options) / sizeof(Options[0]);
@@ -124,7 +127,7 @@ int main(void) {
     case '\n':
     case '\r':
     case KEY_ENTER:
-      if (selection == 4) {
+      if (selection == 3) {
         drawSettingsMenu(mainMenuWindow, 0, xMax / 4, ptrSettings);
         settingsMenu(mainMenuWindow, 0, xMax / 4, ptrSettings);
       } else {
