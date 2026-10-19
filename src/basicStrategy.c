@@ -91,7 +91,7 @@ int main(void) {
   Settings gameSettings;
   Settings *ptrSettings = &gameSettings;
   loadSettings(ptrSettings);
-  Score gameScore;
+  Score gameScore = {0, 0};
   Score *ptrScore = &gameScore;
 
   // Random seed
