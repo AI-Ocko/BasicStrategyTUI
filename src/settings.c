@@ -2,14 +2,24 @@
 #include <curses.h>
 #include <stdlib.h>
 
+static void saveSettings(Settings *settings) {
+  FILE *settingsFilePointer = fopen("settings.txt", "w");
+  if (settingsFilePointer == NULL) {
+    return;
+  } else {
+    fputc(settings->doubleAfterSplit, settingsFilePointer);
+    fputc(settings->h17OrS17, settingsFilePointer);
+    fclose(settingsFilePointer);
+  }
+}
+
 void loadSettings(Settings *settings) {
   FILE *settingsFilePointer = fopen("settings.txt", "r");
   if (settingsFilePointer ==
       NULL) { /* If settings.txt doesn't exist, write a new one. */
-    settingsFilePointer = fopen("settings.txt", "w");
-    fputc('Y', settingsFilePointer);
-    fputc('H', settingsFilePointer);
-    fclose(settingsFilePointer);
+    settings->doubleAfterSplit = 'Y';
+    settings->h17OrS17 = 'H';
+    saveSettings(settings);
   } else {
     settings->doubleAfterSplit = fgetc(settingsFilePointer);
     settings->h17OrS17 = fgetc(settingsFilePointer);
@@ -25,18 +35,6 @@ void loadSettings(Settings *settings) {
     // werase(testWindow);
     // wrefresh(testWindow);
     // delwin(testWindow);
-  }
-}
-
-static void saveSettings(Settings *settings) {
-  FILE *settingsFilePointer = fopen("settings.txt", "w");
-  if (settingsFilePointer == NULL) {
-    fclose(settingsFilePointer);
-    return;
-  } else {
-    fputc(settings->doubleAfterSplit, settingsFilePointer);
-    fputc(settings->h17OrS17, settingsFilePointer);
-    fclose(settingsFilePointer);
   }
 }
 
