@@ -45,6 +45,7 @@ static void drawMainMenu(WINDOW *window, int selection,
       wattroff(window, A_STANDOUT);
   }
   wattron(window, A_DIM);
+  // Automatically resizes window on window sizing
   printCenteredText(window, numberOfOptions + 14, currentWindowWidth,
                     "j/k or up/down to move     Enter to select");
   printCenteredText(window, numberOfOptions + 15, currentWindowWidth,
@@ -73,7 +74,7 @@ static const char *title[] = {
 };
 
 void printTitle(WINDOW *window) {
-  for (int i = 0; i < (int)(sizeof(title) / sizeof(title[0])); i++) {
+  for (int i = 0; i < (int)(sizeof(title) / (int)sizeof(title[0])); i++) {
     printCenteredText(window, i + 2, getmaxx(window), title[i]);
   }
   wrefresh(window);
@@ -105,7 +106,7 @@ int main(void) {
   WINDOW *titleWindow = centerWindow(yMax, xMax);
   printTitle(titleWindow);
 
-  // Initialie Main Menu window
+  // Initialize Main Menu window
   WINDOW *mainMenuWindow = centerWindow(yMax / 2, xMax / 4);
   box(mainMenuWindow, 0, 0);
   int selection = 0, keyPress;
@@ -113,6 +114,16 @@ int main(void) {
   keypad(mainMenuWindow, TRUE); // enable arrow keys, F-keys, etc.
 
   while ((keyPress = wgetch(mainMenuWindow)) != 'q') {
+
+    // Redraw screen
+    getmaxyx(stdscr, yMax, xMax);
+    WINDOW *titleWindow = centerWindow(yMax, xMax);
+    printTitle(titleWindow);
+    WINDOW *mainMenuWindow = centerWindow(yMax / 2, xMax / 4);
+    box(mainMenuWindow, 0, 0);
+    drawMainMenu(mainMenuWindow, 0, xMax / 4);
+    keypad(mainMenuWindow, TRUE); // enable arrow keys, F-keys, etc.
+
     switch (keyPress) {
     case 'k':
     case KEY_UP:
